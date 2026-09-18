@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CreditCard, ExternalLink, LayoutDashboard, LogOut, Plus } from "lucide-react";
+import { CreditCard, ExternalLink, LayoutDashboard, LogOut, Plus, ShieldCheck } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { requireAdmin } from "@/lib/auth";
 import { logoutAction } from "@/app/login/actions";
@@ -15,6 +15,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link className="side-link active" href="/dashboard"><LayoutDashboard size={18} /><span>Overview</span></Link>
           <Link className="side-link" href="/dashboard"><CreditCard size={18} /><span>All cards</span></Link>
           <Link className="side-link" href="/dashboard/cards/new"><Plus size={18} /><span>Create cards</span></Link>
+          <Link className="side-link" href="/dashboard/account"><ShieldCheck size={18} /><span>Account security</span></Link>
           <Link className="side-link" href="/" target="_blank"><ExternalLink size={18} /><span>Public website</span></Link>
         </nav>
         <div className="sidebar-bottom">
