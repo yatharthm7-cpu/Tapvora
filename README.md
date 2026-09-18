@@ -26,7 +26,7 @@ Without environment variables, the app opens in a safe preview mode with an empt
 
 ## Deployment
 
-Deploy the repository to Vercel, add the three environment variables, and test a preview deployment. Then add `tapvora.in` as the production domain and copy the exact DNS records Vercel requests into Hostinger DNS. Do not print or encode production cards until the custom domain and HTTPS redirect route have been verified.
+Deploy the repository to Vercel, add the three environment variables, and test a preview deployment. The production site uses `https://www.tapvora.in`, with `tapvora.in` redirected to it. Do not print or encode production cards until the custom domain and HTTPS redirect route have been verified.
 
 ## Important production check
 

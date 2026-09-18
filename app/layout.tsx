@@ -17,12 +17,23 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     default: "Tapvora — More reviews, one tap away",
     template: "%s — Tapvora",
   },
   description:
     "NFC and QR review cards that take customers straight to your Google Review page.",
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Tapvora",
+    title: "Tapvora — More reviews, one tap away",
+    description:
+      "NFC and QR review cards that take customers straight to your Google Review page.",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
