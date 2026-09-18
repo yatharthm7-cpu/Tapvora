@@ -119,6 +119,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .step-card h3 { font-family: var(--font-display); font-size: 26px; margin: 45px 0 10px; letter-spacing: -.03em; }
 .step-card p { color: #9eaea8; line-height: 1.65; margin: 0; }
 
+.flow-video-section { padding: 104px 0; background: var(--paper); }
+.flow-video-shell { display: grid; gap: 42px; }
+.flow-video-heading { max-width: 760px; }
+.flow-video-heading p { margin: 0; color: var(--ink-soft); font-size: 17px; line-height: 1.7; }
+.flow-video-frame {
+  width: min(100%, 980px); margin-inline: auto; padding: 10px; border-radius: 30px;
+  background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(232,238,229,.9));
+  border: 1px solid rgba(19,33,29,.12); box-shadow: 0 35px 90px rgba(19,33,29,.18);
+}
+.flow-video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 21px; background: #07100d; }
+
 .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
 .feature-list { display: grid; gap: 16px; margin-top: 34px; }
 .feature-item { display: flex; gap: 15px; align-items: start; padding: 18px 0; border-bottom: 1px solid var(--line); }
@@ -317,6 +328,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .film-stage { min-height: 500px; transform: scale(.84); margin-inline: -35px; }
   .film-card { width: 315px; right: -55px; }
   .feature-grid { gap: 38px; }
+  .flow-video-section { padding: 76px 0; }
+  .flow-video-shell { gap: 28px; }
+  .flow-video-frame { padding: 6px; border-radius: 20px; }
+  .flow-video { border-radius: 15px; }
   .activity-chart { gap: 7px; padding-inline: 14px; }
   .card-filters { grid-template-columns: 1fr; }
   .card-filters .button-soft { grid-column: auto; }

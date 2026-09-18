@@ -100,6 +100,31 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="flow-video-section" aria-labelledby="flow-video-title">
+        <div className="shell flow-video-shell">
+          <div className="flow-video-heading" data-reveal>
+            <span className="section-kicker">See it in action</span>
+            <h2 className="display section-title" id="flow-video-title">From tap to review in seconds.</h2>
+            <p>See how a quick NFC tap or QR scan takes a customer straight to the Google Review screen.</p>
+          </div>
+          <div className="flow-video-frame" data-reveal style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
+            <video
+              className="flow-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              preload="metadata"
+              aria-label="Demonstration of the Tapvora NFC and QR Google Review flow"
+            >
+              <source src="/tapvora-review-flow.mp4" type="video/mp4" />
+              Your browser does not support embedded videos.
+            </video>
+          </div>
+        </div>
+      </section>
+
       <section className="product-film" aria-label="Tapvora product experience">
         <div className="film-glow" />
         <div className="shell film-grid">
