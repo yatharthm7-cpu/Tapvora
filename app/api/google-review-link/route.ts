@@ -16,7 +16,7 @@ type GeneratorResult = {
   reviewUrl: string;
 };
 
-const GOOGLE_HOSTS = ["google.com", "g.page", "maps.app.goo.gl", "goo.gl"];
+const GOOGLE_HOSTS = ["google.com", "share.google", "g.page", "maps.app.goo.gl", "goo.gl"];
 
 function isGoogleHost(hostname: string) {
   return GOOGLE_HOSTS.some((host) => hostname === host || hostname.endsWith(`.${host}`));
@@ -73,9 +73,21 @@ async function followGoogleRedirects(startUrl: URL) {
       headers: { "User-Agent": "Tapvora review link generator" },
     });
 
-    await response.body?.cancel();
     const location = response.headers.get("location");
-    if (!location || response.status < 300 || response.status >= 400) return current;
+    if (!location || response.status < 300 || response.status >= 400) {
+      if (current.hostname.endsWith("google.com") && current.pathname === "/share.google") {
+        const html = await response.text();
+        const sharedSearch = html.match(/\/search\?q=([^&"\\]+)/)?.[1];
+        if (sharedSearch) {
+          return new URL(`https://www.google.com/maps/search/?api=1&query=${sharedSearch}`);
+        }
+      } else {
+        await response.body?.cancel();
+      }
+      return current;
+    }
+
+    await response.body?.cancel();
 
     const next = new URL(location, current);
     if (next.protocol !== "https:" || !isGoogleHost(next.hostname)) {
