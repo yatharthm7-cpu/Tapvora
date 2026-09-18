@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -24,9 +23,6 @@ export default function HomePage() {
         <nav className="nav-links" aria-label="Primary navigation">
           <a href="#how-it-works">How it works</a>
           <a href="#system">The system</a>
-          <Link className="button button-dark button-small" href="/login">
-            Admin login <ArrowRight size={15} />
-          </Link>
         </nav>
       </header>
 
@@ -40,7 +36,6 @@ export default function HomePage() {
             </p>
             <div className="hero-actions">
               <a className="button button-dark" href="#how-it-works">See how it works <ArrowRight size={17} /></a>
-              <Link className="button button-outline" href="/dashboard">Open dashboard</Link>
             </div>
             <div className="micro-proof">
               <span><i /> No app needed</span>
