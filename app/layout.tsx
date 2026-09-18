@@ -1,0 +1,33 @@
+import type { Metadata } from "next";
+import { Manrope, Space_Grotesk } from "next/font/google";
+import "./globals.css";
+
+const manrope = Manrope({
+  variable: "--font-body",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://tapvora.in"),
+  title: {
+    default: "Tapvora — More reviews, one tap away",
+    template: "%s — Tapvora",
+  },
+  description:
+    "NFC and QR review cards that take customers straight to your Google Review page.",
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en">
+      <body className={`${manrope.variable} ${spaceGrotesk.variable}`}>{children}</body>
+    </html>
+  );
+}

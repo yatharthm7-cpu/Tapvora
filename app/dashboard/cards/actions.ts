@@ -1,0 +1,82 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/auth";
+import { generateCardCode } from "@/lib/card-code";
+import { isSupabaseConfigured } from "@/lib/config";
+import { createClient } from "@/lib/supabase/server";
+import type { CardStatus } from "@/lib/types";
+import { validateReviewUrl } from "@/lib/validation";
+
+export async function createCardsAction(formData: FormData) {
+  await requireAdmin();
+  const quantity = Math.max(1, Math.min(50, Number(formData.get("quantity") || 1)));
+
+  if (!isSupabaseConfigured()) {
+    redirect("/dashboard/cards/new?error=Connect+Supabase+before+creating+real+card+records.");
+  }
+
+  const supabase = await createClient();
+  let created = 0;
+
+  while (created < quantity) {
+    const rows = Array.from({ length: quantity - created }, () => ({ code: generateCardCode() }));
+    const { data, error } = await supabase.from("cards").insert(rows).select("id");
+
+    if (!error) {
+      created += data.length;
+      continue;
+    }
+
+    if (error.code !== "23505") {
+      redirect(`/dashboard/cards/new?error=${encodeURIComponent(error.message)}`);
+    }
+  }
+
+  revalidatePath("/dashboard");
+  redirect(`/dashboard?created=${created}`);
+}
+
+export async function updateCardAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+  const businessName = String(formData.get("business_name") || "").trim();
+  const destinationUrl = String(formData.get("destination_url") || "").trim();
+  const notes = String(formData.get("notes") || "").trim();
+  const status = String(formData.get("status") || "unused") as CardStatus;
+
+  if (!id || !["unused", "active", "inactive"].includes(status)) {
+    redirect(`/dashboard/cards/${id}?error=Invalid+card+data`);
+  }
+
+  if (destinationUrl) {
+    const validationError = validateReviewUrl(destinationUrl);
+    if (validationError) redirect(`/dashboard/cards/${id}?error=${encodeURIComponent(validationError)}`);
+  }
+
+  if (status === "active" && (!businessName || !destinationUrl)) {
+    redirect(`/dashboard/cards/${id}?error=${encodeURIComponent("An active card needs a business name and Google Review URL.")}`);
+  }
+
+  if (!isSupabaseConfigured()) {
+    redirect("/dashboard?error=Connect+Supabase+before+saving+card+changes.");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("cards")
+    .update({
+      business_name: businessName || null,
+      destination_url: destinationUrl || null,
+      notes: notes || null,
+      status,
+    })
+    .eq("id", id);
+
+  if (error) redirect(`/dashboard/cards/${id}?error=${encodeURIComponent(error.message)}`);
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/cards/${id}`);
+  redirect(`/dashboard/cards/${id}?saved=1`);
+}
