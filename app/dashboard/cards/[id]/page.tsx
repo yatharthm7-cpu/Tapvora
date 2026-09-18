@@ -8,7 +8,6 @@ import { getCard } from "@/lib/cards";
 import { SITE_URL, isSupabaseConfigured } from "@/lib/config";
 import { serialFor } from "@/lib/types";
 import { DeleteCardForm } from "@/components/delete-card-form";
-import { GoogleReviewLinkGenerator } from "@/components/google-review-link-generator";
 import { updateCardAction } from "../actions";
 
 export const metadata: Metadata = { title: "Manage card" };
@@ -41,7 +40,6 @@ export default async function CardDetailPage({ params, searchParams }: { params:
             <section className="form-card">
               <h2>Business & destination</h2>
               <p>Assign the card and control where tap and scan visitors go.</p>
-              <GoogleReviewLinkGenerator initialQuery={card.business_name || ""} />
               <div className="form-grid">
                 <div className="field">
                   <label htmlFor="business_name">Business name</label>

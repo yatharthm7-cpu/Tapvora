@@ -171,19 +171,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .input, .select, .textarea { width: 100%; border: 1px solid var(--line); border-radius: 11px; padding: 12px 13px; color: var(--ink); background: white; outline: none; }
 .input:focus, .select:focus, .textarea:focus { border-color: #7a9a27; box-shadow: 0 0 0 3px rgba(216,255,99,.35); }
 .field-help { color: var(--ink-soft); font-size: 11px; line-height: 1.45; }
-.review-generator { margin: 0 0 24px; padding: 18px; border: 1px solid rgba(44,112,223,.22); border-radius: 14px; background: #f5f9ff; }
-.review-generator-head strong { display: block; font-size: 14px; }
-.review-generator-head span { display: block; margin-top: 4px; color: var(--ink-soft); font-size: 12px; line-height: 1.45; }
-.review-generator-controls { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; margin-top: 15px; }
-.review-generator-error { margin-top: 11px; color: #8e3328; font-size: 12px; }
-.review-results { display: grid; gap: 8px; margin-top: 13px; }
-.review-result { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 11px; align-items: center; padding: 11px; border: 1px solid var(--line); border-radius: 11px; background: white; }
-.review-result > svg { color: #2c70df; }
-.review-result strong, .review-result span { display: block; }
-.review-result strong { font-size: 12px; }
-.review-result span { margin-top: 3px; color: var(--ink-soft); font-size: 11px; line-height: 1.35; }
-.spin { animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
 .form-actions { margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px; }
 .alert { padding: 13px 15px; border-radius: 11px; margin-bottom: 18px; font-size: 13px; }
 .alert-error { background: #fee8e4; color: #8e3328; }
@@ -242,9 +229,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .product-card { padding: 25px; border-radius: 20px; }
   .product-card h2 { font-size: 27px; }
   .fake-qr { width: 82px; height: 82px; }
-  .review-generator-controls { grid-template-columns: 1fr; }
-  .review-result { grid-template-columns: auto 1fr; }
-  .review-result .button { grid-column: 1 / -1; width: 100%; }
   .float-note.two { top: 30px; right: -5px; }
   .float-note.one { bottom: 25px; }
   .feature-grid { gap: 38px; }
