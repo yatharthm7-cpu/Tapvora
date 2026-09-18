@@ -162,6 +162,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .form-card + .form-card { margin-top: 16px; }
 .form-card h2 { font-family: var(--font-display); margin: 0 0 4px; letter-spacing: -.03em; }
 .form-card > p { color: var(--ink-soft); margin: 0 0 24px; font-size: 13px; }
+.danger-zone { border-color: rgba(196,70,55,.28); }
+.danger-zone h2 { color: var(--red); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .field { display: grid; gap: 8px; }
 .field-full { grid-column: 1 / -1; }

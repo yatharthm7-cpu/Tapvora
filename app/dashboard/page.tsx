@@ -13,7 +13,7 @@ function friendlyDate(value: string | null) {
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
-export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ created?: string; saved?: string; error?: string }> }) {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ created?: string; saved?: string; deleted?: string; error?: string }> }) {
   const params = await searchParams;
   const cards = await listCards();
   const active = cards.filter((card) => card.status === "active").length;
@@ -32,6 +32,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {params.error ? <div className="alert alert-error">{params.error}</div> : null}
       {params.created ? <div className="alert alert-success">{params.created} card{params.created === "1" ? "" : "s"} created successfully.</div> : null}
       {params.saved ? <div className="alert alert-success">Card changes saved.</div> : null}
+      {params.deleted ? <div className="alert alert-success">Card deleted successfully.</div> : null}
 
       <section className="stats-grid" aria-label="Card statistics">
         <div className="stat-card"><span className="stat-label">Total cards</span><div className="stat-value"><b>{cards.length}</b><span className="stat-icon"><CreditCard size={18} /></span></div></div>

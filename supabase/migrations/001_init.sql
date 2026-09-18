@@ -85,6 +85,12 @@ to authenticated
 using (public.is_app_admin())
 with check (public.is_app_admin());
 
+drop policy if exists "Admins can delete cards" on public.cards;
+create policy "Admins can delete cards"
+on public.cards for delete
+to authenticated
+using (public.is_app_admin());
+
 -- Public, minimal resolver. It reveals no card inventory and records an open
 -- only when the card is active and has a destination.
 create or replace function public.resolve_card_redirect(requested_code text)

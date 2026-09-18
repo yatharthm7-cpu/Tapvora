@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { getCard } from "@/lib/cards";
 import { SITE_URL, isSupabaseConfigured } from "@/lib/config";
 import { serialFor } from "@/lib/types";
+import { DeleteCardForm } from "@/components/delete-card-form";
 import { updateCardAction } from "../actions";
 
 export const metadata: Metadata = { title: "Manage card" };
@@ -74,6 +75,12 @@ export default async function CardDetailPage({ params, searchParams }: { params:
               <div className="meta-row"><span>Current status</span><span className={`status status-${card.status}`}>{card.status}</span></div>
             </div>
           </section>
+
+          <section className="form-card danger-zone">
+            <h2>Delete card</h2>
+            <p>Permanently remove this card, its redirect link, and its recorded open count.</p>
+            <DeleteCardForm cardId={card.id} cardLabel={serialFor(card.card_number)} />
+          </section>
         </div>
 
         <aside className="qr-panel">
@@ -83,7 +90,7 @@ export default async function CardDetailPage({ params, searchParams }: { params:
           <div className="url-box">{permanentUrl}</div>
           <div className="download-stack">
             <a className="button button-dark button-wide" href={`/api/cards/${card.id}/qr`}><Download size={16} /> Download QR SVG</a>
-            <a className="button button-outline button-wide" href={`/api/cards/${card.id}/print`}><Printer size={16} /> 85.6 × 54 mm design</a>
+            <a className="button button-outline button-wide" href={`/api/cards/${card.id}/print`}><Printer size={16} /> Download finished card</a>
             <a className="button button-soft button-wide" href={permanentUrl} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Test permanent link</a>
           </div>
         </aside>

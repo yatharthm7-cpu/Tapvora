@@ -80,3 +80,25 @@ export async function updateCardAction(formData: FormData) {
   revalidatePath(`/dashboard/cards/${id}`);
   redirect(`/dashboard/cards/${id}?saved=1`);
 }
+
+export async function deleteCardAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+    redirect("/dashboard?error=Invalid+card+identifier.");
+  }
+
+  if (!isSupabaseConfigured()) {
+    redirect("/dashboard?error=Connect+Supabase+before+deleting+cards.");
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("cards").delete().eq("id", id).select("id");
+
+  if (error) redirect(`/dashboard/cards/${id}?error=${encodeURIComponent(error.message)}`);
+  if (!data?.length) redirect(`/dashboard/cards/${id}?error=${encodeURIComponent("Card not found or delete access is not enabled yet.")}`);
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard?deleted=1");
+}
