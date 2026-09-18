@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Check,
@@ -8,13 +9,16 @@ import {
   RefreshCw,
   ScanLine,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { Brand } from "@/components/brand";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { SITE_URL } from "@/lib/config";
 
 export default function HomePage() {
   return (
     <main>
+      <ScrollReveal />
       <header className="shell site-nav">
         <Brand />
         <nav className="nav-links" aria-label="Primary navigation">
@@ -28,7 +32,7 @@ export default function HomePage() {
 
       <section className="hero">
         <div className="shell hero-grid">
-          <div>
+          <div className="hero-content hero-enter">
             <span className="eyebrow">NFC + QR review cards</span>
             <h1 className="display">More reviews.<br /><em>One tap away.</em></h1>
             <p className="hero-copy">
@@ -45,22 +49,18 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="card-stage" aria-label="Tapvora review card preview">
-            <div className="product-card">
-              <div className="stars">★★★★★</div>
-              <h2>Enjoyed your experience?</h2>
-              <p>Your feedback helps us grow.</p>
-              <div className="card-actions">
-                <div>
-                  <div className="fake-qr" />
-                  <p style={{ marginTop: 8, fontWeight: 800 }}>SCAN HERE</p>
-                </div>
-                <div className="tap-area">
-                  <span className="tap-rings">)))</span>
-                  <span>TAP HERE</span>
-                  <span style={{ color: "#d8ff63" }}>LEAVE A REVIEW</span>
-                </div>
-              </div>
+          <div className="card-stage hero-enter hero-enter-late" aria-label="Tapvora review card preview">
+            <div className="hero-orbit orbit-one" />
+            <div className="hero-orbit orbit-two" />
+            <div className="product-card product-card-real">
+              <Image
+                src="/tapvora-card-template-transparent.png"
+                alt="Tapvora Google Review NFC and QR card"
+                fill
+                priority
+                sizes="(max-width: 960px) 90vw, 485px"
+              />
+              <span className="card-sheen" />
             </div>
             <div className="float-note one"><span className="float-icon"><RefreshCw size={17} /></span> Change the link anytime</div>
             <div className="float-note two"><span className="float-icon"><ShieldCheck size={17} /></span> Permanent card URL</div>
@@ -68,25 +68,34 @@ export default function HomePage() {
         </div>
       </section>
 
+      <div className="motion-strip" aria-hidden="true">
+        <div className="motion-strip-track">
+          <span>TAP</span><i /> <span>SCAN</span><i /> <span>REVIEW</span><i /> <span>GROW</span><i />
+          <span>TAP</span><i /> <span>SCAN</span><i /> <span>REVIEW</span><i /> <span>GROW</span><i />
+        </div>
+      </div>
+
       <section className="section section-dark" id="how-it-works">
         <div className="shell">
-          <div className="section-kicker">Frictionless by design</div>
-          <h2 className="display section-title">From a happy customer to a Google Review in seconds.</h2>
-          <p className="section-lead">No searching, no instructions, no app download. The shortest possible path to the review screen.</p>
+          <div data-reveal>
+            <div className="section-kicker">Frictionless by design</div>
+            <h2 className="display section-title">From a happy customer to a Google Review in seconds.</h2>
+            <p className="section-lead">No searching, no instructions, no app download. The shortest possible path to the review screen.</p>
+          </div>
           <div className="steps-grid">
-            <article className="step-card">
+            <article className="step-card" data-reveal style={{ "--reveal-delay": "0ms" } as React.CSSProperties}>
               <div className="step-number">01 / TAP OR SCAN</div>
               <ScanLine size={30} style={{ marginTop: 32, color: "#d8ff63" }} />
               <h3>Customer interacts</h3>
               <p>They tap the NFC zone or scan the printed QR with the phone already in their hand.</p>
             </article>
-            <article className="step-card">
+            <article className="step-card" data-reveal style={{ "--reveal-delay": "110ms" } as React.CSSProperties}>
               <div className="step-number">02 / SMART REDIRECT</div>
               <Link2 size={30} style={{ marginTop: 32, color: "#d8ff63" }} />
               <h3>Tapvora resolves</h3>
               <p>The permanent card link checks its live destination without changing the physical card.</p>
             </article>
-            <article className="step-card">
+            <article className="step-card" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
               <div className="step-number">03 / GOOGLE REVIEW</div>
               <div style={{ marginTop: 30, color: "#d8ff63", letterSpacing: 3 }}>★★★★★</div>
               <h3>Review screen opens</h3>
@@ -96,9 +105,35 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="product-film" aria-label="Tapvora product experience">
+        <div className="film-glow" />
+        <div className="shell film-grid">
+          <div className="film-copy" data-reveal>
+            <span className="section-kicker">One card. One seamless flow.</span>
+            <h2 className="display section-title">A tiny interaction that feels like magic.</h2>
+            <p>Tap and scan meet at the same permanent link. The destination stays under your control while the physical card stays beautifully simple.</p>
+            <div className="film-signal"><Sparkles size={17} /> Live product flow</div>
+          </div>
+          <div className="film-stage" data-reveal style={{ "--reveal-delay": "140ms" } as React.CSSProperties}>
+            <div className="film-phone">
+              <div className="phone-island" />
+              <div className="phone-screen">
+                <div className="phone-brand"><span className="pulse-dot" /> tapvora</div>
+                <div className="phone-state state-one"><Radio size={28} /><b>Card detected</b><small>Opening your review page</small></div>
+                <div className="phone-state state-two"><span className="google-g">G</span><b>Ready to review</b><small>Share your experience</small><div className="phone-stars">★★★★★</div></div>
+              </div>
+            </div>
+            <div className="film-card">
+              <Image src="/tapvora-card-template-transparent.png" alt="" fill sizes="380px" />
+              <span className="tap-wave wave-one" /><span className="tap-wave wave-two" /><span className="tap-wave wave-three" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section" id="system">
         <div className="shell feature-grid">
-          <div>
+          <div data-reveal>
             <span className="section-kicker">Built to stay flexible</span>
             <h2 className="display section-title">Print once. Update forever.</h2>
             <p style={{ color: "var(--ink-soft)", lineHeight: 1.7 }}>
@@ -111,7 +146,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mini-dashboard" aria-label="Dashboard preview">
+          <div className="mini-dashboard" aria-label="Dashboard preview" data-reveal style={{ "--reveal-delay": "140ms" } as React.CSSProperties}>
             <div className="mini-dashboard-head"><span className="mini-logo">tapvora / cards</span><span className="mini-dot" /></div>
             <div className="mini-dashboard-body">
               <div className="mini-empty">
