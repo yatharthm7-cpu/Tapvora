@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Brand } from "@/components/brand";
+import { SITE_URL } from "@/lib/config";
 
 export default function HomePage() {
   return (
@@ -132,7 +133,7 @@ export default function HomePage() {
         <div className="shell footer-row">
           <Brand />
           <span>Tap. Scan. Review. © {new Date().getFullYear()} Tapvora.</span>
-          <span style={{ display: "inline-flex", gap: 7, alignItems: "center" }}><Radio size={15} /> tapvora.in</span>
+          <span style={{ display: "inline-flex", gap: 7, alignItems: "center" }}><Radio size={15} /> {SITE_URL.replace(/^https?:\/\//, "")}</span>
         </div>
       </footer>
     </main>

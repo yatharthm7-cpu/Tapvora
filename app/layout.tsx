@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
+import { SITE_URL } from "@/lib/config";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -15,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://tapvora.in"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Tapvora — More reviews, one tap away",
     template: "%s — Tapvora",

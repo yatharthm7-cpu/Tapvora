@@ -26,15 +26,15 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     color: { dark: "#000000", light: "#ffffff" },
   });
   const serial = escapeXml(serialFor(card.card_number));
-  const template = await readFile(path.join(process.cwd(), "public", "tapvora-card-template.png"));
+  const template = await readFile(path.join(process.cwd(), "public", "tapvora-card-template-transparent.png"));
   const templateDataUrl = `data:image/png;base64,${template.toString("base64")}`;
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85.6mm" height="54mm" viewBox="0 0 1584 994">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85.6mm" height="54mm" viewBox="0 0 1582 994">
   <title>${serial} Tapvora print artwork</title>
   <desc>Exact CR80 dimensions: 85.6 by 54 millimetres. Permanent URL ${escapeXml(permanentUrl)}</desc>
-  <image width="1584" height="994" preserveAspectRatio="none" xlink:href="${templateDataUrl}"/>
-  <image x="690" y="344" width="258" height="258" preserveAspectRatio="xMidYMid meet" xlink:href="${qrDataUrl}"/>
+  <image width="1582" height="994" preserveAspectRatio="none" xlink:href="${templateDataUrl}"/>
+  <image x="689" y="344" width="258" height="258" preserveAspectRatio="xMidYMid meet" xlink:href="${qrDataUrl}"/>
 </svg>`;
 
   return new Response(svg, {

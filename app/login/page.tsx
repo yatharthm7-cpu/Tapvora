@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, LockKeyhole } from "lucide-react";
 import { Brand } from "@/components/brand";
-import { isSupabaseConfigured } from "@/lib/config";
+import { isSupabaseConfigured, SITE_URL } from "@/lib/config";
 import { loginAction } from "./actions";
 
 export const metadata: Metadata = { title: "Admin login" };
@@ -45,7 +45,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               {demo ? "Preview dashboard" : "Sign in"} <ArrowRight size={17} />
             </button>
           </form>
-          <div style={{ marginTop: 22, textAlign: "center", fontSize: 12 }}><Link className="muted" href="/">← Back to tapvora.in</Link></div>
+          <div style={{ marginTop: 22, textAlign: "center", fontSize: 12 }}><Link className="muted" href="/">← Back to {SITE_URL.replace(/^https?:\/\//, "")}</Link></div>
         </div>
       </section>
     </main>

@@ -1,4 +1,10 @@
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://tapvora.in").replace(/\/$/, "");
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+
+export const SITE_URL = (
+  configuredSiteUrl ||
+  (vercelProductionUrl ? `https://${vercelProductionUrl}` : "http://localhost:3000")
+).replace(/\/$/, "");
 
 export function isSupabaseConfigured() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
