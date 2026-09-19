@@ -2,7 +2,6 @@ import Image from "next/image";
 import {
   ArrowRight,
   Check,
-  CreditCard,
   Link2,
   Radio,
   RefreshCw,
@@ -152,7 +151,7 @@ export default function HomePage() {
       </section>
 
       <section className="section" id="system">
-        <div className="shell feature-grid">
+        <div className="shell system-copy">
           <div data-reveal>
             <span className="section-kicker">Built to stay flexible</span>
             <h2 className="display section-title">Print once. Update forever.</h2>
@@ -166,21 +165,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mini-dashboard" aria-label="Dashboard preview" data-reveal style={{ "--reveal-delay": "140ms" } as React.CSSProperties}>
-            <div className="mini-dashboard-head"><span className="mini-logo">tapvora / cards</span><span className="mini-dot" /></div>
-            <div className="mini-dashboard-body">
-              <div className="mini-empty">
-                <span className="mini-empty-icon"><CreditCard size={23} /></span>
-                <strong>No card activity to display</strong>
-                <p>Live totals appear here only after cards are created and connected.</p>
-              </div>
-              <div className="mini-flow">
-                <span><i>1</i>Create a permanent card link</span>
-                <span><i>2</i>Add the verified Google Review URL</span>
-                <span><i>3</i>Activate only after testing</span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
