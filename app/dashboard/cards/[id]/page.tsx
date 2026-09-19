@@ -5,6 +5,7 @@ import { ArrowLeft, Download, ExternalLink, Printer, Save } from "lucide-react";
 import QRCode from "qrcode";
 import { notFound } from "next/navigation";
 import { getCard } from "@/lib/cards";
+import { listBusinesses } from "@/lib/businesses";
 import { SITE_URL, isSupabaseConfigured } from "@/lib/config";
 import { serialFor } from "@/lib/types";
 import { DeleteCardForm } from "@/components/delete-card-form";
@@ -16,7 +17,7 @@ export const dynamic = "force-dynamic";
 export default async function CardDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string; saved?: string }> }) {
   const { id } = await params;
   const query = await searchParams;
-  const card = await getCard(id);
+  const [card, businesses] = await Promise.all([getCard(id), listBusinesses()]);
   if (!card) notFound();
 
   const permanentUrl = `${SITE_URL}/r/${card.code}`;
@@ -41,6 +42,14 @@ export default async function CardDetailPage({ params, searchParams }: { params:
               <h2>Business & destination</h2>
               <p>Assign the card and control where tap and scan visitors go.</p>
               <div className="form-grid">
+                <div className="field field-full">
+                  <label htmlFor="business_id">Saved business profile</label>
+                  <select className="select" id="business_id" name="business_id" defaultValue={card.business_id || ""}>
+                    <option value="">Manual business details</option>
+                    {businesses.map((business) => <option key={business.id} value={business.id}>{business.name}</option>)}
+                  </select>
+                  <span className="field-help">When selected, the saved business name and review link below are used automatically.</span>
+                </div>
                 <div className="field">
                   <label htmlFor="business_name">Business name</label>
                   <input className="input" id="business_name" name="business_name" defaultValue={card.business_name || ""} placeholder="Enter the verified business name" />

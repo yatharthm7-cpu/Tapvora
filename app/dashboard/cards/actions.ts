@@ -41,13 +41,26 @@ export async function createCardsAction(formData: FormData) {
 export async function updateCardAction(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id") || "");
-  const businessName = String(formData.get("business_name") || "").trim();
-  const destinationUrl = String(formData.get("destination_url") || "").trim();
+  const businessId = String(formData.get("business_id") || "").trim();
+  let businessName = String(formData.get("business_name") || "").trim();
+  let destinationUrl = String(formData.get("destination_url") || "").trim();
   const notes = String(formData.get("notes") || "").trim();
   const status = String(formData.get("status") || "unused") as CardStatus;
 
   if (!id || !["unused", "active", "inactive"].includes(status)) {
     redirect(`/dashboard/cards/${id}?error=Invalid+card+data`);
+  }
+
+  if (!isSupabaseConfigured()) {
+    redirect("/dashboard?error=Connect+Supabase+before+saving+card+changes.");
+  }
+
+  const supabase = await createClient();
+  if (businessId) {
+    const { data: business, error: businessError } = await supabase.from("businesses").select("name, review_url").eq("id", businessId).maybeSingle();
+    if (businessError || !business) redirect(`/dashboard/cards/${id}?error=${encodeURIComponent("Select a valid business profile.")}`);
+    businessName = business.name;
+    destinationUrl = business.review_url;
   }
 
   if (destinationUrl) {
@@ -59,15 +72,11 @@ export async function updateCardAction(formData: FormData) {
     redirect(`/dashboard/cards/${id}?error=${encodeURIComponent("An active card needs a business name and Google Review URL.")}`);
   }
 
-  if (!isSupabaseConfigured()) {
-    redirect("/dashboard?error=Connect+Supabase+before+saving+card+changes.");
-  }
-
-  const supabase = await createClient();
   const { error } = await supabase
     .from("cards")
     .update({
       business_name: businessName || null,
+      business_id: businessId || null,
       destination_url: destinationUrl || null,
       notes: notes || null,
       status,

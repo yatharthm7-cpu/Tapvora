@@ -76,7 +76,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {isFiltered ? <Link className="button button-soft" href="/dashboard">Clear</Link> : null}
         </form>
         {cards.length ? (
-          <div className="table-wrap">
+          <>
+          <div className="table-wrap desktop-card-table">
             <table className="data-table">
               <thead><tr><th>Card</th><th>Permanent URL</th><th>Business</th><th>Status</th><th>Opens</th><th>Last opened</th><th /></tr></thead>
               <tbody>{cards.map((card) => (
@@ -92,6 +93,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               ))}</tbody>
             </table>
           </div>
+          <div className="mobile-card-list">
+            {cards.map((card) => (
+              <Link className="mobile-card-row" href={`/dashboard/cards/${card.id}`} key={card.id}>
+                <div><strong className="card-code">{serialFor(card.card_number)}</strong><span className={`status status-${card.status}`}>{card.status}</span></div>
+                <p>{card.business_name || "Not assigned"}</p>
+                <div className="mobile-card-meta"><span>{card.redirect_count} opens</span><span>{friendlyDate(card.last_redirected_at)}</span><ArrowUpRight size={17} /></div>
+              </Link>
+            ))}
+          </div>
+          </>
         ) : <div className="empty-state">{isFiltered ? "No cards match those filters." : "No cards yet. Create the first batch to generate permanent links."}</div>}
       </section>
     </>
