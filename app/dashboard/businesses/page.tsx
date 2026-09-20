@@ -23,6 +23,7 @@ export default async function BusinessesPage({ searchParams }: { searchParams: P
       <Link className="business-card" href={`/dashboard/businesses/${business.id}`} key={business.id}>
         <div className="business-card-head"><div><Building2 size={20} /><h2>{business.name}</h2></div><ArrowUpRight size={18} /></div>
         <p>{business.review_url}</p>
+        {business.address ? <p>{business.address}</p> : null}
         <div className="business-card-meta"><span>{business.card_count} card{business.card_count === 1 ? "" : "s"}</span><span>{business.contact_name || "No contact added"}</span></div>
       </Link>
     ))}</div> : <div className="panel empty-state">{query ? "No businesses match your search." : "No businesses yet. Add your first customer profile."}</div>}

@@ -14,7 +14,7 @@ export default async function SetupPage({ searchParams }: { searchParams: Promis
     {query.error ? <div className="alert alert-error">{query.error}</div> : null}
     {cards.length ? <CardSetupWizard
       cards={cards.map((card) => ({ id: card.id, label: serialFor(card.card_number), code: card.code, status: card.status }))}
-      businesses={businesses.map((business) => ({ id: business.id, name: business.name, reviewUrl: business.review_url }))}
+      businesses={businesses.map((business) => ({ id: business.id, name: business.name, reviewUrl: business.review_url, address: business.address || "" }))}
     /> : <div className="panel empty-state">Create cards before starting the setup wizard.</div>}
   </div>;
 }

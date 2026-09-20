@@ -21,7 +21,7 @@ export async function listBusinesses(query = ""): Promise<BusinessWithCardCount[
       ...(business as unknown as Business),
       card_count: Array.isArray(business.cards) ? business.cards.length : 0,
     }))
-    .filter((business) => !needle || [business.name, business.contact_name, business.contact_email, business.contact_phone]
+    .filter((business) => !needle || [business.name, business.contact_name, business.contact_email, business.contact_phone, business.address]
       .filter(Boolean).join(" ").toLowerCase().includes(needle));
 }
 

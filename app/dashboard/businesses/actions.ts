@@ -13,6 +13,7 @@ function values(formData: FormData) {
     contact_name: String(formData.get("contact_name") || "").trim() || null,
     contact_email: String(formData.get("contact_email") || "").trim() || null,
     contact_phone: String(formData.get("contact_phone") || "").trim() || null,
+    address: String(formData.get("address") || "").trim().slice(0, 500) || null,
     notes: String(formData.get("notes") || "").trim() || null,
   };
 }

@@ -21,6 +21,7 @@ function BusinessForm({ action }: { action: (formData: FormData) => Promise<void
     <div className="field field-full"><label htmlFor="review_url">Google Review URL</label><input className="input" id="review_url" name="review_url" type="url" placeholder="https://g.page/r/.../review" required /></div>
     <div className="field"><label htmlFor="contact_email">Email</label><input className="input" id="contact_email" name="contact_email" type="email" /></div>
     <div className="field"><label htmlFor="contact_phone">Phone</label><input className="input" id="contact_phone" name="contact_phone" type="tel" /></div>
+    <div className="field field-full"><label htmlFor="address">Business address</label><textarea className="textarea" id="address" name="address" rows={2} maxLength={500} autoComplete="street-address" placeholder="Shop number, street, area, city, state and PIN code" /></div>
     <div className="field field-full"><label htmlFor="notes">Internal notes</label><textarea className="textarea" id="notes" name="notes" rows={3} /></div>
   </div><div className="form-actions"><button className="button button-dark" type="submit"><Save size={16} /> Save business</button></div></section></form>;
 }
