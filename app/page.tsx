@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowRight,
   Check,
   Link2,
+  MessageCircle,
   Radio,
   RefreshCw,
   ScanLine,
@@ -11,9 +13,10 @@ import {
 } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { SITE_URL } from "@/lib/config";
+import { SITE_URL, WHATSAPP_NUMBER } from "@/lib/config";
 
 export default function HomePage() {
+  const whatsappUrl = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Tapvora, I would like a quote for NFC and QR review cards.")}` : "";
   return (
     <main>
       <ScrollReveal />
@@ -22,6 +25,7 @@ export default function HomePage() {
         <nav className="nav-links" aria-label="Primary navigation">
           <a href="#how-it-works">How it works</a>
           <a href="#system">The system</a>
+          <Link href="/contact">Request a quote</Link>
         </nav>
       </header>
 
@@ -35,6 +39,7 @@ export default function HomePage() {
             </p>
             <div className="hero-actions">
               <a className="button button-dark" href="#how-it-works">See how it works <ArrowRight size={17} /></a>
+              <Link className="button button-outline" href="/contact">Request a quote</Link>
             </div>
             <div className="micro-proof">
               <span><i /> No app needed</span>
@@ -168,13 +173,24 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="quote-cta-section">
+        <div className="shell quote-cta" data-reveal>
+          <div><span className="section-kicker">For your business</span><h2 className="display">Ready to make reviews easier?</h2><p>Tell us how many cards you need and where they will be used. We’ll share a clear quote with customization and delivery details.</p></div>
+          <div className="quote-cta-actions"><Link className="button button-primary" href="/contact">Request a quote <ArrowRight size={17} /></Link>{whatsappUrl ? <a className="button button-whatsapp-dark" href={whatsappUrl} target="_blank" rel="noreferrer"><MessageCircle size={18} /> WhatsApp</a> : null}</div>
+        </div>
+      </section>
+
+      <section className="testimonials-note"><div className="shell"><strong>Customer stories</strong><p>Verified customer experiences will be published here only with permission. We don’t use invented testimonials.</p></div></section>
+
       <footer className="site-footer">
         <div className="shell footer-row">
           <Brand />
           <span>Tap. Scan. Review. © {new Date().getFullYear()} Tapvora.</span>
+          <div className="footer-links"><Link href="/contact">Contact</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refunds</Link></div>
           <span style={{ display: "inline-flex", gap: 7, alignItems: "center" }}><Radio size={15} /> {SITE_URL.replace(/^https?:\/\//, "")}</span>
         </div>
       </footer>
+      {whatsappUrl ? <a className="whatsapp-float" href={whatsappUrl} target="_blank" rel="noreferrer" aria-label="Contact Tapvora on WhatsApp"><MessageCircle size={23} /></a> : null}
     </main>
   );
 }
