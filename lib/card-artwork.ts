@@ -1,26 +1,26 @@
 import QRCode from "qrcode";
+import sharp from "sharp";
 import { SITE_URL } from "./config";
-import { serialFor, type TapvoraCard } from "./types";
+import type { TapvoraCard } from "./types";
 
-export function escapeXml(value: string) {
-  return value.replace(/[<>&"']/g, (char) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" })[char]!);
-}
+const CARD_WIDTH = 1004;
+const CARD_HEIGHT = 638;
 
-export async function renderCardSvg(card: TapvoraCard, templateDataUrl: string) {
+export async function renderCardPng(card: TapvoraCard, template: Buffer) {
   const permanentUrl = `${SITE_URL}/r/${card.code}`;
-  const qrDataUrl = await QRCode.toDataURL(permanentUrl, {
+  const qrSize = Math.round(CARD_WIDTH * (258 / 1574));
+  const qr = await QRCode.toBuffer(permanentUrl, {
+    type: "png",
     errorCorrectionLevel: "H",
     margin: 2,
-    width: 1000,
+    width: qrSize,
     color: { dark: "#000000", light: "#ffffff" },
   });
-  const serial = escapeXml(serialFor(card.card_number));
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85mm" height="54mm" viewBox="0 0 1574 1000">
-  <title>${serial} Tapvora print artwork</title>
-  <desc>Exact card dimensions: 85 by 54 millimetres. Permanent URL ${escapeXml(permanentUrl)}</desc>
-  <image width="1574" height="1000" preserveAspectRatio="none" xlink:href="${templateDataUrl}"/>
-  <image x="686" y="346" width="258" height="258" preserveAspectRatio="xMidYMid meet" xlink:href="${qrDataUrl}"/>
-</svg>`;
+  return sharp(template)
+    .resize(CARD_WIDTH, CARD_HEIGHT, { fit: "fill" })
+    .composite([{ input: qr, left: Math.round(CARD_WIDTH * (686 / 1574)), top: Math.round(CARD_HEIGHT * (346 / 1000)) }])
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .withMetadata({ density: 300 })
+    .toBuffer();
 }

@@ -9,6 +9,7 @@ import { listBusinesses } from "@/lib/businesses";
 import { SITE_URL, isSupabaseConfigured } from "@/lib/config";
 import { serialFor } from "@/lib/types";
 import { DeleteCardForm } from "@/components/delete-card-form";
+import { CopyLinkButton } from "@/components/copy-link-button";
 import { updateCardAction } from "../actions";
 
 export const metadata: Metadata = { title: "Manage card" };
@@ -98,8 +99,10 @@ export default async function CardDetailPage({ params, searchParams }: { params:
           <div className="qr-box"><Image src={qrDataUrl} alt={`QR code for ${serialFor(card.card_number)}`} width={220} height={220} unoptimized /></div>
           <div className="url-box">{permanentUrl}</div>
           <div className="download-stack">
-            <a className="button button-dark button-wide" href={`/api/cards/${card.id}/qr`}><Download size={16} /> Download QR SVG</a>
-            <a className="button button-outline button-wide" href={`/api/cards/${card.id}/print`}><Printer size={16} /> Download finished card</a>
+            <CopyLinkButton value={permanentUrl} label="Copy permanent link" />
+            <a className="button button-dark button-wide" href={`/api/cards/${card.id}/qr`}><Download size={16} /> Download QR PNG</a>
+            <a className="button button-outline button-wide" href={`/api/cards/${card.id}/print`}><Printer size={16} /> Download cropped card PNG</a>
+            <CopyLinkButton value={`/api/cards/${card.id}/print`} label="Copy PNG download link" />
             <a className="button button-soft button-wide" href={permanentUrl} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Test permanent link</a>
           </div>
         </aside>

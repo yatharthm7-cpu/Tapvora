@@ -24,7 +24,7 @@ export default async function ProductionPage({ searchParams }: { searchParams: P
       <div><h1>Production checklist</h1><p>Match each printed QR to the NFC chip carrying the same permanent URL.</p></div>
       <div className="production-downloads">
         <a className="button button-outline" href="/api/cards/bulk/csv"><FileSpreadsheet size={16} /> Export CSV</a>
-        <a className="button button-dark" href="/api/cards/bulk/print"><Download size={16} /> Download all designs</a>
+        <a className="button button-dark" href="/api/cards/bulk/print"><Download size={16} /> Download all PNGs (.zip)</a>
       </div>
     </header>
     {query.saved ? <div className="alert alert-success">Production checklist saved.</div> : null}

@@ -166,7 +166,7 @@ export default function HomePage() {
             <div className="feature-list">
               <div className="feature-item"><span className="check"><Check size={15} /></span><div><strong>One URL for QR and NFC</strong><p>Every card has one permanent code, keeping production simple and mistake-resistant.</p></div></div>
               <div className="feature-item"><span className="check"><Check size={15} /></span><div><strong>Fast admin control</strong><p>Assign a business, paste its review URL, and activate the card in one place.</p></div></div>
-              <div className="feature-item"><span className="check"><Check size={15} /></span><div><strong>Production-ready downloads</strong><p>Download the QR alone or an exact 85 × 54 mm card artwork file.</p></div></div>
+              <div className="feature-item"><span className="check"><Check size={15} /></span><div><strong>Production-ready downloads</strong><p>Download phone-compatible PNGs for the QR or the exact 85 × 54 mm card artwork.</p></div></div>
             </div>
           </div>
 
