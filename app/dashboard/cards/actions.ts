@@ -127,3 +127,28 @@ export async function deleteAllCardsAction() {
   revalidatePath("/dashboard");
   redirect(`/dashboard?deleted=all&deleted_count=${Number(data || 0)}`);
 }
+
+export async function updateProductionChecklistAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+  const checklist = {
+    nfc_written: formData.get("nfc_written") === "on",
+    qr_printed: formData.get("qr_printed") === "on",
+    tap_tested: formData.get("tap_tested") === "on",
+    scan_tested: formData.get("scan_tested") === "on",
+    ready_to_sell: formData.get("ready_to_sell") === "on",
+  };
+
+  if (!/^[0-9a-f-]{36}$/i.test(id)) redirect("/dashboard/production?error=Invalid+card+identifier.");
+  if (checklist.ready_to_sell && !(checklist.nfc_written && checklist.qr_printed && checklist.tap_tested && checklist.scan_tested)) {
+    redirect("/dashboard/production?error=Complete+all+four+production+checks+before+marking+a+card+ready+to+sell.");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("cards").update(checklist).eq("id", id);
+  if (error) redirect(`/dashboard/production?error=${encodeURIComponent(error.message)}`);
+
+  revalidatePath("/dashboard/production");
+  revalidatePath(`/dashboard/cards/${id}`);
+  redirect("/dashboard/production?saved=1");
+}

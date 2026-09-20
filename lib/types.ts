@@ -11,6 +11,11 @@ export type TapvoraCard = {
   notes: string | null;
   redirect_count: number;
   last_redirected_at: string | null;
+  nfc_written: boolean;
+  qr_printed: boolean;
+  tap_tested: boolean;
+  scan_tested: boolean;
+  ready_to_sell: boolean;
   created_at: string;
   updated_at: string;
 };
