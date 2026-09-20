@@ -1,4 +1,4 @@
--- Atomically clear card inventory and restart display numbering at TV-0001.
+-- Keep the explicit condition required by Supabase safe-update protection.
 create or replace function public.delete_all_cards_and_reset_sequence()
 returns bigint
 language plpgsql
