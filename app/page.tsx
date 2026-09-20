@@ -23,8 +23,9 @@ export default function HomePage() {
       <header className="shell site-nav">
         <Brand />
         <nav className="nav-links" aria-label="Primary navigation">
-          <a href="#how-it-works">How it works</a>
-          <a href="#system">The system</a>
+          <Link href="/how-it-works">How it works</Link>
+          <Link href="/specifications">Specifications</Link>
+          <Link href="/faq">FAQ</Link>
           <Link href="/contact">Request a quote</Link>
         </nav>
       </header>
@@ -186,7 +187,7 @@ export default function HomePage() {
         <div className="shell footer-row">
           <Brand />
           <span>Tap. Scan. Review. © {new Date().getFullYear()} Tapvora.</span>
-          <div className="footer-links"><Link href="/contact">Contact</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refunds</Link></div>
+          <div className="footer-links"><Link href="/how-it-works">How it works</Link><Link href="/specifications">Specifications</Link><Link href="/shipping">Shipping</Link><Link href="/faq">FAQ</Link><Link href="/customer-stories">Customer stories</Link><Link href="/contact">Contact</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refunds</Link></div>
           <span style={{ display: "inline-flex", gap: 7, alignItems: "center" }}><Radio size={15} /> {SITE_URL.replace(/^https?:\/\//, "")}</span>
         </div>
       </footer>

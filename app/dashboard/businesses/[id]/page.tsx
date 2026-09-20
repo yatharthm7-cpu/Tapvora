@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, CalendarDays, CreditCard, MousePointerClick, Save } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarDays, CreditCard, Download, MousePointerClick, Save } from "lucide-react";
 import { notFound } from "next/navigation";
 import { DeleteBusinessForm } from "@/components/delete-business-form";
 import { getBusinessAnalytics } from "@/lib/analytics";
@@ -22,7 +22,7 @@ export default async function BusinessPage({ params, searchParams }: { params: P
   const maxDaily = Math.max(1, ...analytics.daily.map((day) => day.count));
 
   return <>
-    <header className="admin-top"><div><h1>{business.name}</h1><p>{business.card_count} assigned card{business.card_count === 1 ? "" : "s"}</p></div><Link className="button button-soft" href="/dashboard/businesses"><ArrowLeft size={17} /> Back</Link></header>
+    <header className="admin-top"><div><h1>{business.name}</h1><p>{business.card_count} assigned card{business.card_count === 1 ? "" : "s"}</p></div><div className="admin-top-actions"><a className="button button-dark" href={`/api/businesses/${business.id}/handover`}><Download size={17} /> Handover PDF</a><Link className="button button-soft" href="/dashboard/businesses"><ArrowLeft size={17} /> Back</Link></div></header>
     {query.error ? <div className="alert alert-error">{query.error}</div> : null}
     {query.saved || query.created ? <div className="alert alert-success">Business saved successfully.</div> : null}
 
