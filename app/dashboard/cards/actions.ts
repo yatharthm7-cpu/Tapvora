@@ -111,3 +111,19 @@ export async function deleteCardAction(formData: FormData) {
   revalidatePath("/dashboard");
   redirect("/dashboard?deleted=1");
 }
+
+export async function deleteAllCardsAction() {
+  await requireAdmin();
+
+  if (!isSupabaseConfigured()) {
+    redirect("/dashboard?error=Connect+Supabase+before+deleting+cards.");
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("delete_all_cards_and_reset_sequence");
+
+  if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
+
+  revalidatePath("/dashboard");
+  redirect(`/dashboard?deleted=all&deleted_count=${Number(data || 0)}`);
+}

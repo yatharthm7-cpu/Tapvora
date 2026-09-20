@@ -6,7 +6,7 @@ export const SITE_URL = (
   (vercelProductionUrl ? `https://${vercelProductionUrl}` : "http://localhost:3000")
 ).replace(/\/$/, "");
 
-export const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(/\D/g, "");
+export const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919638902001").replace(/\D/g, "");
 
 export function isSupabaseConfigured() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
