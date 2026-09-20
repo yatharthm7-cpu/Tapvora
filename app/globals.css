@@ -77,7 +77,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .orbit-two { width: 350px; height: 350px; animation-direction: reverse; animation-duration: 13s; }
 .orbit-two::after { background: var(--lime-dark); top: auto; left: auto; right: 4%; bottom: 24%; }
 .product-card {
-  width: min(100%, 485px); aspect-ratio: 85.6 / 54; border-radius: 26px;
+  width: min(100%, 485px); aspect-ratio: 85 / 54; border-radius: 26px;
   background: var(--ink); color: white; padding: 34px; position: relative; overflow: hidden;
   box-shadow: 0 45px 80px rgba(19,33,29,.32); transform: rotate(4deg);
 }
@@ -158,7 +158,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .state-two { opacity: 0; transform: translateY(16px); animation: state-two 7s ease-in-out infinite; }
 .google-g { font-size: 33px; font-weight: 900; color: #4285f4; }
 .phone-stars { color: #f9b300; letter-spacing: 3px; margin-top: 12px; }
-.film-card { position: absolute; width: 370px; aspect-ratio: 85.6/54; right: -38px; bottom: 5px; transform: rotate(-9deg); z-index: 3; animation: film-card-float 5s ease-in-out infinite; }
+.film-card { position: absolute; width: 370px; aspect-ratio: 85/54; right: -38px; bottom: 5px; transform: rotate(-9deg); z-index: 3; animation: film-card-float 5s ease-in-out infinite; }
 .film-card img { object-fit: contain; filter: drop-shadow(0 35px 32px rgba(0,0,0,.5)); }
 .tap-wave { position: absolute; width: 65px; height: 65px; border: 2px solid var(--lime); border-radius: 50%; top: -10px; left: 32%; opacity: 0; animation: tap-wave 2.4s ease-out infinite; }
 .wave-two { animation-delay: .6s; }.wave-three { animation-delay: 1.2s; }

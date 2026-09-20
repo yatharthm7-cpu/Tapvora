@@ -30,17 +30,17 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const templateDataUrl = `data:image/png;base64,${template.toString("base64")}`;
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85.6mm" height="54mm" viewBox="0 0 1582 994">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85mm" height="54mm" viewBox="0 0 1574 1000">
   <title>${serial} Tapvora print artwork</title>
-  <desc>Exact CR80 dimensions: 85.6 by 54 millimetres. Permanent URL ${escapeXml(permanentUrl)}</desc>
-  <image width="1582" height="994" preserveAspectRatio="none" xlink:href="${templateDataUrl}"/>
-  <image x="689" y="344" width="258" height="258" preserveAspectRatio="xMidYMid meet" xlink:href="${qrDataUrl}"/>
+  <desc>Exact card dimensions: 85 by 54 millimetres. Permanent URL ${escapeXml(permanentUrl)}</desc>
+  <image width="1574" height="1000" preserveAspectRatio="none" xlink:href="${templateDataUrl}"/>
+  <image x="686" y="346" width="258" height="258" preserveAspectRatio="xMidYMid meet" xlink:href="${qrDataUrl}"/>
 </svg>`;
 
   return new Response(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${serial}-${card.code}-85.6x54mm.svg"`,
+      "Content-Disposition": `attachment; filename="${serial}-${card.code}-85x54mm.svg"`,
       "Cache-Control": "private, no-store",
     },
   });
