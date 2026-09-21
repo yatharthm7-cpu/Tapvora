@@ -12,10 +12,11 @@ export async function sendCustomerLoginLinkAction(formData: FormData) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) redirect("/account/login?error=Enter+a+valid+email+address");
 
   const supabase = await createClient();
-  await supabase.auth.signInWithOtp({
+  const { error } = await supabase.auth.signInWithOtp({
     email,
     options: { shouldCreateUser: true, emailRedirectTo: `${SITE_URL}/auth/callback?next=/account` },
   });
+  if (error) redirect("/account/login?error=We+could+not+send+the+sign-in+email.+Please+contact+Tapvora+support.");
 
   redirect("/account/login?sent=1");
 }
