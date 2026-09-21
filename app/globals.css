@@ -436,6 +436,34 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .activation-success { display: grid; justify-items: center; gap: 12px; padding: 30px 5px; text-align: center; }
 .activation-success-icon { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 20px; background: var(--lime); }
 .activation-success .button { margin-top: 9px; }
+.activation-success-actions { display: flex; gap: 9px; width: 100%; justify-content: center; }
+
+.customer-auth-page, .customer-account-page { min-height: 100vh; background: radial-gradient(circle at 85% 8%, rgba(216,255,99,.2), transparent 28%), var(--paper); }
+.customer-auth-shell { min-height: calc(100vh - 80px); display: grid; grid-template-columns: 1fr 460px; gap: 80px; align-items: center; padding-block: 70px; }
+.customer-auth-copy h1 { max-width: 650px; margin: 20px 0; font-size: clamp(48px,6vw,78px); line-height: .98; }
+.customer-auth-copy > p { max-width: 590px; color: var(--ink-soft); font-size: 17px; line-height: 1.7; }
+.customer-account-nav { min-height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.customer-account-nav > div { display: flex; align-items: center; gap: 13px; color: var(--ink-soft); font-size: 12px; }
+.customer-account-shell { padding-block: 62px 90px; }
+.customer-account-heading { max-width: 740px; margin-bottom: 34px; }
+.customer-account-heading h1 { margin: 18px 0 12px; font-size: clamp(46px,6vw,76px); line-height: 1; }
+.customer-account-heading p { margin: 0; color: var(--ink-soft); font-size: 16px; line-height: 1.65; }
+.customer-business-list { display: grid; gap: 20px; }
+.customer-business-card { padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: white; box-shadow: 0 18px 50px rgba(19,33,29,.08); }
+.customer-business-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.customer-business-head span:first-child { color: var(--ink-soft); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+.customer-business-head h2 { margin: 5px 0; font-family: var(--font-display); font-size: 28px; }
+.customer-business-head p { margin: 0; color: var(--ink-soft); font-size: 13px; }
+.customer-link-form { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 12px; margin-block: 24px; }
+.customer-link-form label { display: grid; gap: 7px; font-size: 12px; font-weight: 800; }
+.customer-card-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.customer-card-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; border-radius: 13px; background: #f6f7f3; }
+.customer-card-item > div { display: flex; align-items: center; gap: 10px; }
+.customer-card-item span { display: grid; gap: 2px; }
+.customer-card-item small { color: var(--ink-soft); text-transform: capitalize; }
+.account-empty { padding: 55px 24px; text-align: center; border: 1px dashed var(--line); border-radius: 22px; background: rgba(255,255,255,.6); }
+.account-empty h2 { margin: 15px 0 8px; font-family: var(--font-display); }
+.account-empty p { margin: 0; color: var(--ink-soft); }
 
 @media (max-width: 960px) {
   .hero-grid, .feature-grid { grid-template-columns: 1fr; }
@@ -460,6 +488,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .production-row { grid-template-columns: 110px minmax(440px,1fr) 70px auto; overflow-x: auto; }
   .public-grid.three { grid-template-columns: 1fr; }
   .activation-shell { grid-template-columns: 1fr; gap: 42px; }
+  .customer-auth-shell { grid-template-columns: 1fr; gap: 42px; }
 }
 
 @media (max-width: 680px) {
@@ -497,6 +526,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .activation-intro > p { font-size: 15px; }
   .activation-nav > span { display: none; }
   .activation-card { padding: 21px 17px; border-radius: 19px; }
+  .activation-success-actions { flex-direction: column; }
+  .customer-auth-shell { min-height: auto; padding-block: 42px 65px; gap: 30px; }
+  .customer-auth-copy h1 { font-size: 43px; }
+  .customer-account-nav { padding-block: 12px; align-items: flex-start; }
+  .customer-account-nav > div { align-items: flex-end; flex-direction: column; gap: 5px; }
+  .customer-account-nav > div > span { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+  .customer-account-shell { padding-block: 42px 70px; }
+  .customer-business-card { padding: 20px 16px; }
+  .customer-business-head { flex-direction: column; }
+  .customer-link-form { grid-template-columns: 1fr; }
+  .customer-link-form .button { width: 100%; }
+  .customer-card-grid { grid-template-columns: 1fr; }
   .spec-table > div { grid-template-columns: 1fr; gap: 6px; }
   .admin-top-actions { margin-left: auto; }
   .quote-cta { padding: 30px 22px; align-items: stretch; flex-direction: column; gap: 28px; }

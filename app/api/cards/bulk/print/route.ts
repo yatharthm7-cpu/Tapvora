@@ -25,8 +25,8 @@ export async function GET() {
     files.push({ name: `cards/${serial}-${card.code}-85x54mm.png`, data: await renderCardPng(card, template) });
   }
 
-  const headings = ["Card ID", "Permanent URL", "Business", "Status"];
-  const rows = cards.map((card) => [serialFor(card.card_number), `${SITE_URL}/r/${card.code}`, card.business_name, card.status]);
+  const headings = ["Card ID", "Permanent URL", "Activation PIN", "Business", "Status"];
+  const rows = cards.map((card) => [serialFor(card.card_number), `${SITE_URL}/r/${card.code}`, card.activation_pin, card.business_name, card.status]);
   const csv = [headings, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n");
   files.push({ name: "Tapvora-card-mapping.csv", data: Buffer.from(`\ufeff${csv}`, "utf8") });
 

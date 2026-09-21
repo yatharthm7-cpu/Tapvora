@@ -22,3 +22,13 @@ export async function requireAdmin() {
 
   return { id: data.user.id, email: data.user.email || "Admin", demo: false };
 }
+
+export async function requireCustomer() {
+  if (!isSupabaseConfigured()) redirect("/account/login");
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user?.email) redirect("/account/login");
+
+  return { id: data.user.id, email: data.user.email };
+}
