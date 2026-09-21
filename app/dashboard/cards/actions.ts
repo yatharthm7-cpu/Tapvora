@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
-import { generateCardCode } from "@/lib/card-code";
+import { generateActivationPin, generateCardCode } from "@/lib/card-code";
 import { isSupabaseConfigured } from "@/lib/config";
 import { createClient } from "@/lib/supabase/server";
 import type { CardStatus } from "@/lib/types";
@@ -21,7 +21,10 @@ export async function createCardsAction(formData: FormData) {
   let created = 0;
 
   while (created < quantity) {
-    const rows = Array.from({ length: quantity - created }, () => ({ code: generateCardCode() }));
+    const rows = Array.from({ length: quantity - created }, () => ({
+      code: generateCardCode(),
+      activation_pin: generateActivationPin(),
+    }));
     const { data, error } = await supabase.from("cards").insert(rows).select("id");
 
     if (!error) {
