@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Download, ExternalLink, Printer, Save } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, KeyRound, Printer, Save } from "lucide-react";
 import QRCode from "qrcode";
 import { notFound } from "next/navigation";
 import { getCard } from "@/lib/cards";
@@ -98,6 +98,7 @@ export default async function CardDetailPage({ params, searchParams }: { params:
           <p className="muted" style={{ margin: "0 0 18px", fontSize: 12 }}>Use the same URL for the printed QR and the NFC NDEF record.</p>
           <div className="qr-box"><Image src={qrDataUrl} alt={`QR code for ${serialFor(card.card_number)}`} width={220} height={220} unoptimized /></div>
           <div className="url-box">{permanentUrl}</div>
+          {card.status === "unused" ? <div className="activation-pin-box"><span><KeyRound size={14} /> Activation PIN</span><strong>{card.activation_pin || "Run migration 010"}</strong><small>Give this PIN only to the business receiving this card.</small></div> : null}
           <div className="download-stack">
             <CopyLinkButton value={permanentUrl} label="Copy permanent link" />
             <a className="button button-dark button-wide" href={`/api/cards/${card.id}/qr`}><Download size={16} /> Download QR PNG</a>

@@ -27,6 +27,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
   }
 
   const card = data[0] as { destination_url: string | null; card_status: string };
+  if (card.card_status === "unused") {
+    return NextResponse.redirect(`${origin}/activate/${normalizedCode}`, 307);
+  }
+
   if (card.card_status !== "active" || !card.destination_url) {
     return NextResponse.redirect(`${origin}/card-unavailable?reason=inactive`, 307);
   }

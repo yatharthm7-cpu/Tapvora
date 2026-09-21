@@ -384,6 +384,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .qr-box { background: var(--paper); border-radius: 15px; padding: 24px; display: grid; place-items: center; }
 .qr-box img { width: 220px; max-width: 100%; height: auto; }
 .url-box { margin: 16px 0; padding: 12px; border-radius: 10px; background: #f6f7f3; font-size: 11px; overflow-wrap: anywhere; color: var(--ink-soft); }
+.activation-pin-box { display: grid; gap: 6px; margin: -7px 0 16px; padding: 13px; border: 1px solid rgba(184,223,64,.7); border-radius: 11px; background: #fbffe9; }
+.activation-pin-box span { display: flex; align-items: center; gap: 7px; color: var(--ink-soft); font-size: 11px; font-weight: 800; }
+.activation-pin-box strong { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 21px; letter-spacing: .16em; }
+.activation-pin-box small { color: var(--ink-soft); line-height: 1.45; }
 .download-stack { display: grid; gap: 9px; }
 .meta-list { display: grid; gap: 12px; margin-top: 19px; }
 .meta-row { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; }
@@ -410,6 +414,29 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .unavailable h1 { font-family: var(--font-display); font-size: 42px; letter-spacing: -.045em; margin: 0 0 12px; }
 .unavailable p { color: var(--ink-soft); line-height: 1.65; }
 
+.activation-page { min-height: 100vh; background: radial-gradient(circle at 15% 20%, rgba(185,228,211,.7), transparent 32%), var(--paper); }
+.activation-nav { height: 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.activation-nav > span { color: var(--ink-soft); font-size: 12px; font-weight: 800; }
+.activation-shell { min-height: calc(100vh - 80px); display: grid; grid-template-columns: 1fr 480px; gap: 80px; align-items: center; padding-block: 70px; }
+.activation-intro h1 { max-width: 650px; margin: 20px 0; font-size: clamp(48px,6vw,78px); line-height: .98; }
+.activation-intro > p { max-width: 620px; color: var(--ink-soft); font-size: 17px; line-height: 1.7; }
+.activation-flow { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 30px; }
+.activation-flow span { display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.65); font-size: 11px; font-weight: 800; }
+.activation-card { padding: 28px; border: 1px solid var(--line); border-radius: 24px; background: white; box-shadow: var(--shadow); }
+.activation-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 23px; }
+.activation-card-head > svg { padding: 9px; width: 42px; height: 42px; border-radius: 12px; background: var(--lime); }
+.activation-card-head h2, .activation-success h2 { margin: 0 0 5px; font-family: var(--font-display); font-size: 25px; }
+.activation-card-head p, .activation-success p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+.activation-form { display: grid; gap: 16px; }
+.activation-form label { display: grid; gap: 7px; font-size: 12px; font-weight: 800; }
+.activation-form label small { color: var(--ink-soft); font-weight: 600; }
+.activation-pin-input { text-transform: uppercase; letter-spacing: .13em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.activation-help { display: flex; align-items: center; gap: 6px; justify-content: center; margin: 18px 0 0; color: var(--ink-soft); font-size: 11px; }
+.activation-help a { font-weight: 800; text-decoration: underline; }
+.activation-success { display: grid; justify-items: center; gap: 12px; padding: 30px 5px; text-align: center; }
+.activation-success-icon { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 20px; background: var(--lime); }
+.activation-success .button { margin-top: 9px; }
+
 @media (max-width: 960px) {
   .hero-grid, .feature-grid { grid-template-columns: 1fr; }
   .hero { padding-top: 10px; }
@@ -432,6 +459,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .business-manage-grid { grid-template-columns: 1fr; }
   .production-row { grid-template-columns: 110px minmax(440px,1fr) 70px auto; overflow-x: auto; }
   .public-grid.three { grid-template-columns: 1fr; }
+  .activation-shell { grid-template-columns: 1fr; gap: 42px; }
 }
 
 @media (max-width: 680px) {
@@ -464,6 +492,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .public-hero { padding: 58px 0; }
   .public-content { padding-block: 48px 70px; }
   .public-grid.two { grid-template-columns: 1fr; }
+  .activation-shell { min-height: auto; padding-block: 42px 65px; gap: 30px; }
+  .activation-intro h1 { font-size: 43px; }
+  .activation-intro > p { font-size: 15px; }
+  .activation-nav > span { display: none; }
+  .activation-card { padding: 21px 17px; border-radius: 19px; }
   .spec-table > div { grid-template-columns: 1fr; gap: 6px; }
   .admin-top-actions { margin-left: auto; }
   .quote-cta { padding: 30px 22px; align-items: stretch; flex-direction: column; gap: 28px; }

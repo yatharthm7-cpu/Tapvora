@@ -12,9 +12,9 @@ function csv(value: string | number | boolean | null) {
 export async function GET() {
   await requireAdmin();
   const cards = await listCards();
-  const columns = ["Card ID", "Code", "Permanent URL", "Business", "Status", "NFC written", "QR printed", "Tap tested", "Scan tested", "Ready to sell"];
+  const columns = ["Card ID", "Code", "Permanent URL", "Activation PIN", "Business", "Status", "NFC written", "QR printed", "Tap tested", "Scan tested", "Ready to sell"];
   const rows = cards.map((card) => [
-    serialFor(card.card_number), card.code, `${SITE_URL}/r/${card.code}`, card.business_name, card.status,
+    serialFor(card.card_number), card.code, `${SITE_URL}/r/${card.code}`, card.activation_pin, card.business_name, card.status,
     card.nfc_written, card.qr_printed, card.tap_tested, card.scan_tested, card.ready_to_sell,
   ]);
   const body = [columns, ...rows].map((row) => row.map(csv).join(",")).join("\r\n");
