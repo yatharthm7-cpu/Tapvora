@@ -16,10 +16,10 @@ function activationLabel(card: TapvoraCard) {
 
   return {
     text: {
-      text: `<span foreground="#13211d"><b>ACTIVATION PIN: ${pin}</b></span>`,
-      font: "Geist 14",
+      text: `<span foreground="#13211d"><b>${pin}</b></span>`,
+      font: "Geist 16",
       fontfile: path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"),
-      width: 240,
+      width: 160,
       align: "centre" as const,
       rgba: true,
     },
@@ -42,7 +42,8 @@ export async function renderCardPng(card: TapvoraCard, template: Buffer) {
     .resize(CARD_WIDTH, CARD_HEIGHT, { fit: "fill" })
     .composite([
       { input: qr, left: Math.round(CARD_WIDTH * (686 / 1574)), top: Math.round(CARD_HEIGHT * (346 / 1000)) },
-      { input: label, left: 373, top: 560 },
+      { input: label, left: 413, top: 568 },
+      { input: label, left: 414, top: 568 },
     ])
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .withMetadata({ density: 300 })
