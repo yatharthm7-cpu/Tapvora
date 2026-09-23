@@ -86,13 +86,26 @@ function brandLines(name: string, maxChars: number) {
 }
 
 function brandType(name: string, hasLogo: boolean) {
-  const lines = brandLines(name, hasLogo ? 15 : 26);
+  const lines = brandLines(name, hasLogo ? 14 : 26);
   const longestLine = Math.max(...lines.map((line) => line.length));
   const fontSize = hasLogo
-    ? longestLine > 13 ? 18 : longestLine > 10 ? 20 : 23
+    ? longestLine > 12 ? 22 : longestLine > 9 ? 24 : 27
     : longestLine > 23 ? 23 : longestLine > 17 ? 26 : 30;
 
   return { lines, fontSize };
+}
+
+async function prepareLogo(logo: Buffer, logoOnly: boolean) {
+  return sharp(logo)
+    .trim({ threshold: 12 })
+    .resize({
+      width: logoOnly ? 310 : 150,
+      height: logoOnly ? 118 : 108,
+      fit: "contain",
+      background: { r: 255, g: 255, b: 255, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
 }
 
 async function brandingOverlays(card: TapvoraCard) {
@@ -101,8 +114,8 @@ async function brandingOverlays(card: TapvoraCard) {
   if (!logo && !name) return [];
   const hasLogo = Boolean(logo);
   const hasName = Boolean(name);
-  const textLeft = hasLogo ? 202 : 66;
-  const textWidth = hasLogo ? 165 : 298;
+  const textLeft = hasLogo ? 218 : 66;
+  const textWidth = hasLogo ? 158 : 298;
   const typography = name ? brandType(name, hasLogo) : null;
   const cover = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}"><rect width="100%" height="100%" fill="${CARD_SURFACE}"/></svg>`);
   const overlays: OverlayOptions[] = [
@@ -111,16 +124,8 @@ async function brandingOverlays(card: TapvoraCard) {
 
   if (logo) {
     const logoOnly = !hasName;
-    const preparedLogo = await sharp(logo)
-      .resize({
-        width: logoOnly ? 285 : 125,
-        height: logoOnly ? 105 : 92,
-        fit: "contain",
-        background: { r: 255, g: 255, b: 255, alpha: 0 },
-      })
-      .png()
-      .toBuffer();
-    overlays.push({ input: preparedLogo, left: logoOnly ? 67 : 58, top: logoOnly ? 65 : 69 });
+    const preparedLogo = await prepareLogo(logo, logoOnly);
+    overlays.push({ input: preparedLogo, left: logoOnly ? 57 : 50, top: logoOnly ? 60 : 64 });
   }
 
   if (name && typography) {
@@ -137,13 +142,13 @@ async function brandingOverlays(card: TapvoraCard) {
         },
       },
       left: textLeft,
-      top: typography.lines.length > 1 ? 82 : 96,
+      top: typography.lines.length > 1 ? 78 : 94,
     } satisfies OverlayOptions;
     overlays.push(brandNameOverlay);
   }
 
-  const poweredLeft = hasLogo && !hasName ? 67 : textLeft;
-  const poweredWidth = hasLogo && !hasName ? 285 : textWidth;
+  const poweredLeft = hasLogo && !hasName ? 57 : textLeft;
+  const poweredWidth = hasLogo && !hasName ? 310 : textWidth;
   overlays.push({
     input: {
       text: {
@@ -218,15 +223,16 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
   const templateSource = options.templateHref || `data:image/png;base64,${template.toString("base64")}`;
   const logo = logoBuffer(card);
   const name = brandingName(card);
-  const logoSource = options.logoHref || card.card_logo_data || "";
-  const hasLogo = Boolean(logoSource && logo);
+  const hasLogo = Boolean(logo);
   const hasBranding = Boolean(hasLogo || name);
   const hasName = Boolean(name);
-  const textX = hasLogo ? 202 : 66;
+  const textX = hasLogo ? 218 : 66;
   const typography = name ? brandType(name, hasLogo) : null;
   const logoOnly = hasLogo && !hasName;
+  const preparedLogo = logo ? await prepareLogo(logo, logoOnly) : null;
+  const logoSource = options.logoHref || (preparedLogo ? `data:image/png;base64,${preparedLogo.toString("base64")}` : "");
   const logoElement = hasLogo
-    ? `<image href="${logoSource}" x="${logoOnly ? 67 : 58}" y="${logoOnly ? 65 : 69}" width="${logoOnly ? 285 : 125}" height="${logoOnly ? 105 : 92}" preserveAspectRatio="xMidYMid meet"/>`
+    ? `<image href="${logoSource}" x="${logoOnly ? 57 : 50}" y="${logoOnly ? 60 : 64}" width="${logoOnly ? 310 : 150}" height="${logoOnly ? 118 : 108}" preserveAspectRatio="xMidYMid meet"/>`
     : "";
   const nameSpans = typography
     ? typography.lines.map((line, index) => `<tspan x="${textX}" dy="${index ? Math.round(typography.fontSize * 1.18) : 0}">${escapeXml(line)}</tspan>`).join("")
