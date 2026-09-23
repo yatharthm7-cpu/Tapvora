@@ -86,10 +86,10 @@ function brandLines(name: string, maxChars: number) {
 }
 
 function brandType(name: string, hasLogo: boolean) {
-  const lines = brandLines(name, hasLogo ? 17 : 26);
+  const lines = brandLines(name, hasLogo ? 15 : 26);
   const longestLine = Math.max(...lines.map((line) => line.length));
   const fontSize = hasLogo
-    ? longestLine > 15 ? 19 : longestLine > 11 ? 21 : 24
+    ? longestLine > 13 ? 18 : longestLine > 10 ? 20 : 23
     : longestLine > 23 ? 23 : longestLine > 17 ? 26 : 30;
 
   return { lines, fontSize };
@@ -100,51 +100,63 @@ async function brandingOverlays(card: TapvoraCard) {
   const name = brandingName(card);
   if (!logo && !name) return [];
   const hasLogo = Boolean(logo);
-  const textLeft = hasLogo ? 176 : 66;
-  const textWidth = hasLogo ? 190 : 298;
-  const { lines, fontSize } = brandType(name || "Business", hasLogo);
+  const hasName = Boolean(name);
+  const textLeft = hasLogo ? 202 : 66;
+  const textWidth = hasLogo ? 165 : 298;
+  const typography = name ? brandType(name, hasLogo) : null;
   const cover = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}"><rect width="100%" height="100%" fill="${CARD_SURFACE}"/></svg>`);
   const overlays: OverlayOptions[] = [
     { input: cover, left: BRAND_COVER.left, top: BRAND_COVER.top },
   ];
 
   if (logo) {
+    const logoOnly = !hasName;
     const preparedLogo = await sharp(logo)
-      .resize({ width: 95, height: 70, fit: "contain", background: { r: 255, g: 255, b: 255, alpha: 0 } })
+      .resize({
+        width: logoOnly ? 285 : 125,
+        height: logoOnly ? 105 : 92,
+        fit: "contain",
+        background: { r: 255, g: 255, b: 255, alpha: 0 },
+      })
       .png()
       .toBuffer();
-    overlays.push({ input: preparedLogo, left: 66, top: 78 });
+    overlays.push({ input: preparedLogo, left: logoOnly ? 67 : 58, top: logoOnly ? 65 : 69 });
   }
 
-  const brandNameOverlay = {
-    input: {
-      text: {
-        text: `<span foreground="#0f1f1b" weight="700">${lines.map(escapeMarkup).join("\n")}</span>`,
-        font: `Space Grotesk ${fontSize}`,
-        fontfile: BRAND_FONT_FILE,
-        width: textWidth,
-        align: "left",
-        spacing: 1,
-        rgba: true,
+  if (name && typography) {
+    const brandNameOverlay = {
+      input: {
+        text: {
+          text: `<span foreground="#0f1f1b" weight="700">${typography.lines.map(escapeMarkup).join("\n")}</span>`,
+          font: `Space Grotesk ${typography.fontSize}`,
+          fontfile: BRAND_FONT_FILE,
+          width: textWidth,
+          align: "left",
+          spacing: 1,
+          rgba: true,
+        },
       },
-    },
-    left: textLeft,
-    top: lines.length > 1 ? 82 : 94,
-  } satisfies OverlayOptions;
-  overlays.push(brandNameOverlay);
+      left: textLeft,
+      top: typography.lines.length > 1 ? 82 : 96,
+    } satisfies OverlayOptions;
+    overlays.push(brandNameOverlay);
+  }
+
+  const poweredLeft = hasLogo && !hasName ? 67 : textLeft;
+  const poweredWidth = hasLogo && !hasName ? 285 : textWidth;
   overlays.push({
     input: {
       text: {
         text: '<span foreground="#50615b">Powered by <b>Tapvora</b></span>',
         font: "Geist 9",
         fontfile: path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"),
-        width: textWidth,
-        align: "left",
+        width: poweredWidth,
+        align: hasLogo && !hasName ? "centre" : "left",
         rgba: true,
       },
     },
-    left: textLeft,
-    top: 172,
+    left: poweredLeft,
+    top: hasLogo && !hasName ? 177 : 172,
   });
 
   return overlays;
@@ -209,18 +221,28 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
   const logoSource = options.logoHref || card.card_logo_data || "";
   const hasLogo = Boolean(logoSource && logo);
   const hasBranding = Boolean(hasLogo || name);
-  const textX = hasLogo ? 176 : 66;
-  const { lines: nameLines, fontSize: nameFontSize } = brandType(name || "Business", hasLogo);
+  const hasName = Boolean(name);
+  const textX = hasLogo ? 202 : 66;
+  const typography = name ? brandType(name, hasLogo) : null;
+  const logoOnly = hasLogo && !hasName;
   const logoElement = hasLogo
-    ? `<image href="${logoSource}" x="66" y="78" width="95" height="70" preserveAspectRatio="xMidYMid meet"/>`
+    ? `<image href="${logoSource}" x="${logoOnly ? 67 : 58}" y="${logoOnly ? 65 : 69}" width="${logoOnly ? 285 : 125}" height="${logoOnly ? 105 : 92}" preserveAspectRatio="xMidYMid meet"/>`
     : "";
-  const nameSpans = nameLines.map((line, index) => `<tspan x="${textX}" dy="${index ? Math.round(nameFontSize * 1.18) : 0}">${escapeXml(line)}</tspan>`).join("");
-  const nameY = nameLines.length > 1 ? 105 : 122;
+  const nameSpans = typography
+    ? typography.lines.map((line, index) => `<tspan x="${textX}" dy="${index ? Math.round(typography.fontSize * 1.18) : 0}">${escapeXml(line)}</tspan>`).join("")
+    : "";
+  const nameY = typography?.lines.length === 1 ? 122 : 105;
+  const nameElement = typography
+    ? `<text x="${textX}" y="${nameY}" font-family="TapvoraBrand, Arial, sans-serif" font-size="${typography.fontSize}" font-weight="700" letter-spacing="-0.5" fill="#0f1f1b">${nameSpans}</text>`
+    : "";
+  const poweredX = logoOnly ? 210 : textX;
+  const poweredAnchor = logoOnly ? ' text-anchor="middle"' : "";
+  const poweredY = logoOnly ? 186 : 181;
   const brandingElements = hasBranding ? `
   <rect x="${BRAND_COVER.left}" y="${BRAND_COVER.top}" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}" fill="${CARD_SURFACE}"/>
   ${logoElement}
-  <text x="${textX}" y="${nameY}" font-family="TapvoraBrand, Arial, sans-serif" font-size="${nameFontSize}" font-weight="700" letter-spacing="-0.5" fill="#0f1f1b">${nameSpans}</text>
-  <text x="${textX}" y="181" font-family="TapvoraGeist, Arial, sans-serif" font-size="11" fill="#50615b">Powered by <tspan font-weight="800">Tapvora</tspan></text>` : "";
+  ${nameElement}
+  <text x="${poweredX}" y="${poweredY}"${poweredAnchor} font-family="TapvoraGeist, Arial, sans-serif" font-size="11" fill="#50615b">Powered by <tspan font-weight="800">Tapvora</tspan></text>` : "";
 
   return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="85mm" height="54mm" viewBox="0 0 ${CARD_WIDTH} ${CARD_HEIGHT}">
