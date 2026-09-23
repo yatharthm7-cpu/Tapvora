@@ -113,22 +113,21 @@ async function brandingOverlays(card: TapvoraCard) {
   const name = brandingName(card);
   if (!logo && !name) return [];
   const hasLogo = Boolean(logo);
-  const hasName = Boolean(name);
-  const textLeft = hasLogo ? 218 : 66;
-  const textWidth = hasLogo ? 158 : 298;
-  const typography = name ? brandType(name, hasLogo) : null;
+  const displayName = hasLogo ? null : name;
+  const textLeft = 66;
+  const textWidth = 298;
+  const typography = displayName ? brandType(displayName, false) : null;
   const cover = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}"><rect width="100%" height="100%" fill="${CARD_SURFACE}"/></svg>`);
   const overlays: OverlayOptions[] = [
     { input: cover, left: BRAND_COVER.left, top: BRAND_COVER.top },
   ];
 
   if (logo) {
-    const logoOnly = !hasName;
-    const preparedLogo = await prepareLogo(logo, logoOnly);
-    overlays.push({ input: preparedLogo, left: logoOnly ? 57 : 50, top: logoOnly ? 60 : 64 });
+    const preparedLogo = await prepareLogo(logo, true);
+    overlays.push({ input: preparedLogo, left: 57, top: 60 });
   }
 
-  if (name && typography) {
+  if (displayName && typography) {
     const brandNameOverlay = {
       input: {
         text: {
@@ -147,8 +146,8 @@ async function brandingOverlays(card: TapvoraCard) {
     overlays.push(brandNameOverlay);
   }
 
-  const poweredLeft = hasLogo && !hasName ? 57 : textLeft;
-  const poweredWidth = hasLogo && !hasName ? 310 : textWidth;
+  const poweredLeft = hasLogo ? 152 : textLeft;
+  const poweredWidth = hasLogo ? 120 : textWidth;
   overlays.push({
     input: {
       text: {
@@ -156,12 +155,12 @@ async function brandingOverlays(card: TapvoraCard) {
         font: "Geist 9",
         fontfile: path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"),
         width: poweredWidth,
-        align: hasLogo && !hasName ? "centre" : "left",
+        align: hasLogo ? "centre" : "left",
         rgba: true,
       },
     },
     left: poweredLeft,
-    top: hasLogo && !hasName ? 177 : 172,
+    top: hasLogo ? 177 : 172,
   });
 
   return overlays;
@@ -225,14 +224,13 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
   const name = brandingName(card);
   const hasLogo = Boolean(logo);
   const hasBranding = Boolean(hasLogo || name);
-  const hasName = Boolean(name);
-  const textX = hasLogo ? 218 : 66;
-  const typography = name ? brandType(name, hasLogo) : null;
-  const logoOnly = hasLogo && !hasName;
-  const preparedLogo = logo ? await prepareLogo(logo, logoOnly) : null;
+  const displayName = hasLogo ? null : name;
+  const textX = 66;
+  const typography = displayName ? brandType(displayName, false) : null;
+  const preparedLogo = logo ? await prepareLogo(logo, true) : null;
   const logoSource = options.logoHref || (preparedLogo ? `data:image/png;base64,${preparedLogo.toString("base64")}` : "");
   const logoElement = hasLogo
-    ? `<image href="${logoSource}" x="${logoOnly ? 57 : 50}" y="${logoOnly ? 60 : 64}" width="${logoOnly ? 310 : 150}" height="${logoOnly ? 118 : 108}" preserveAspectRatio="xMidYMid meet"/>`
+    ? `<image href="${logoSource}" x="57" y="60" width="310" height="118" preserveAspectRatio="xMidYMid meet"/>`
     : "";
   const nameSpans = typography
     ? typography.lines.map((line, index) => `<tspan x="${textX}" dy="${index ? Math.round(typography.fontSize * 1.18) : 0}">${escapeXml(line)}</tspan>`).join("")
@@ -241,9 +239,9 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
   const nameElement = typography
     ? `<text x="${textX}" y="${nameY}" font-family="TapvoraBrand, Arial, sans-serif" font-size="${typography.fontSize}" font-weight="700" letter-spacing="-0.5" fill="#0f1f1b">${nameSpans}</text>`
     : "";
-  const poweredX = logoOnly ? 210 : textX;
-  const poweredAnchor = logoOnly ? ' text-anchor="middle"' : "";
-  const poweredY = logoOnly ? 186 : 181;
+  const poweredX = hasLogo ? 212 : textX;
+  const poweredAnchor = hasLogo ? ' text-anchor="middle"' : "";
+  const poweredY = hasLogo ? 186 : 181;
   const brandingElements = hasBranding ? `
   <rect x="${BRAND_COVER.left}" y="${BRAND_COVER.top}" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}" fill="${CARD_SURFACE}"/>
   ${logoElement}
