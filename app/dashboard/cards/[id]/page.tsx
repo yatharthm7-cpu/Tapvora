@@ -104,6 +104,8 @@ export default async function CardDetailPage({ params, searchParams }: { params:
             <a className="button button-dark button-wide" href={`/api/cards/${card.id}/qr`}><Download size={16} /> Download QR PNG</a>
             <a className="button button-outline button-wide" href={`/api/cards/${card.id}/print`}><Printer size={16} /> Download card PNG with PIN</a>
             <CopyLinkButton value={`/api/cards/${card.id}/print`} label="Copy PNG download link" />
+            <a className="button button-outline button-wide" href={`/api/cards/${card.id}/print-svg`}><Download size={16} /> Download card SVG with PIN</a>
+            <CopyLinkButton value={`/api/cards/${card.id}/print-svg`} label="Copy SVG download link" />
             <a className="button button-soft button-wide" href={permanentUrl} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Test permanent link</a>
           </div>
         </aside>
