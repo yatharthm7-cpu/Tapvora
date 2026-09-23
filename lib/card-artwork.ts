@@ -153,6 +153,7 @@ export async function renderCardPng(card: TapvoraCard, template: Buffer) {
       { input: label, left: 413, top: 568 },
       { input: label, left: 414, top: 568 },
     ])
+    .flatten({ background: "#ffffff" })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .withMetadata({ density: 300 })
     .toBuffer();
@@ -209,6 +210,7 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
       @font-face { font-family: TapvoraGeist; src: url("${fontSource}") format("truetype"); }
     </style>
   </defs>
+  <rect x="0" y="0" width="${CARD_WIDTH}" height="${CARD_HEIGHT}" fill="#ffffff"/>
   <image href="${templateSource}" x="0" y="0" width="${CARD_WIDTH}" height="${CARD_HEIGHT}" preserveAspectRatio="none"/>
   ${brandingElements}
   ${positionedQr}
