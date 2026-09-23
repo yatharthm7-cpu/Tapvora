@@ -3,18 +3,18 @@
 import { Trash2 } from "lucide-react";
 import { deleteAllCardsAction } from "@/app/dashboard/cards/actions";
 
-export function DeleteAllCardsForm({ count }: { count: number }) {
+export function DeleteAllCardsForm({ deletableCount, activeCount }: { deletableCount: number; activeCount: number }) {
   return (
     <form
       action={deleteAllCardsAction}
       onSubmit={(event) => {
-        if (!window.confirm(`Permanently delete all ${count} cards? Their links and analytics will be removed. The next card will restart at TV-0001. This cannot be undone.`)) {
+        if (!window.confirm(`Permanently delete ${deletableCount} unused or inactive card${deletableCount === 1 ? "" : "s"}? ${activeCount} active card${activeCount === 1 ? "" : "s"} will be protected. Deleted links and analytics cannot be recovered.`)) {
           event.preventDefault();
         }
       }}
     >
-      <button className="button button-danger" type="submit">
-        <Trash2 size={16} /> Delete all cards
+      <button className="button button-danger" type="submit" disabled={!deletableCount}>
+        <Trash2 size={16} /> {deletableCount ? "Delete non-active cards" : "Active cards protected"}
       </button>
     </form>
   );

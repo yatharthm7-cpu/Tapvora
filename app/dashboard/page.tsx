@@ -15,7 +15,7 @@ function friendlyDate(value: string | null) {
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
-type DashboardParams = { created?: string; saved?: string; deleted?: string; deleted_count?: string; error?: string; q?: string; status?: string };
+type DashboardParams = { created?: string; saved?: string; deleted?: string; deleted_count?: string; protected_count?: string; error?: string; q?: string; status?: string };
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<DashboardParams> }) {
   const params = await searchParams;
@@ -27,6 +27,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     getDashboardAnalytics(),
   ]);
   const active = allCards.filter((card) => card.status === "active").length;
+  const deletable = allCards.length - active;
   const redirects = allCards.reduce((sum, card) => sum + Number(card.redirect_count || 0), 0);
   const isDemo = !isSupabaseConfigured();
   const maxDaily = Math.max(1, ...analytics.daily.map((day) => day.count));
@@ -45,7 +46,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {params.created ? <div className="alert alert-success">{params.created} card{params.created === "1" ? "" : "s"} created successfully.</div> : null}
       {params.saved ? <div className="alert alert-success">Card changes saved.</div> : null}
       {params.deleted === "1" ? <div className="alert alert-success">Card deleted successfully.</div> : null}
-      {params.deleted === "all" ? <div className="alert alert-success">All {Number(params.deleted_count || 0)} cards were deleted. The next card will be TV-0001.</div> : null}
+      {params.deleted === "non-active" ? <div className="alert alert-success">{Number(params.deleted_count || 0)} unused or inactive cards deleted. {Number(params.protected_count || 0)} active cards were preserved.</div> : null}
 
       <section className="stats-grid" aria-label="Real card statistics">
         <div className="stat-card"><span className="stat-label">Total cards</span><div className="stat-value"><b>{allCards.length}</b><span className="stat-icon"><CreditCard size={18} /></span></div></div>
@@ -111,10 +112,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {allCards.length ? (
         <section className="panel delete-all-panel">
           <div>
-            <h2>Delete all cards</h2>
-            <p>Permanently remove every card and its analytics. Card numbering will restart from TV-0001.</p>
+            <h2>Delete non-active cards</h2>
+            <p>Permanently remove unused and inactive cards only. All {active} active card{active === 1 ? "" : "s"}, permanent links, and analytics are protected.</p>
           </div>
-          <DeleteAllCardsForm count={allCards.length} />
+          <DeleteAllCardsForm deletableCount={deletable} activeCount={active} />
         </section>
       ) : null}
     </>

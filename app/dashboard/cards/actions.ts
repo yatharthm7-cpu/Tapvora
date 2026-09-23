@@ -143,12 +143,18 @@ export async function deleteAllCardsAction() {
   }
 
   const supabase = await createClient();
+  const { count: protectedCount, error: countError } = await supabase
+    .from("cards")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "active");
+  if (countError) redirect(`/dashboard?error=${encodeURIComponent(countError.message)}`);
+
   const { data, error } = await supabase.rpc("delete_all_cards_and_reset_sequence");
 
   if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
 
   revalidatePath("/dashboard");
-  redirect(`/dashboard?deleted=all&deleted_count=${Number(data || 0)}`);
+  redirect(`/dashboard?deleted=non-active&deleted_count=${Number(data || 0)}&protected_count=${Number(protectedCount || 0)}`);
 }
 
 export async function updateProductionChecklistAction(formData: FormData) {
