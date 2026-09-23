@@ -8,6 +8,13 @@ import type { TapvoraCard } from "./types";
 const CARD_WIDTH = 1004;
 const CARD_HEIGHT = 638;
 const ACTIVATION_PIN_PATTERN = /^[A-F0-9]{8}$/;
+let artworkFontDataPromise: Promise<string> | undefined;
+
+function artworkFontData() {
+  artworkFontDataPromise ??= readFile(path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"))
+    .then((font) => font.toString("base64"));
+  return artworkFontDataPromise;
+}
 
 function activationPin(card: TapvoraCard) {
   const pin = card.activation_pin?.trim().toUpperCase() || "";
@@ -57,7 +64,12 @@ export async function renderCardPng(card: TapvoraCard, template: Buffer) {
     .toBuffer();
 }
 
-export async function renderCardSvg(card: TapvoraCard, template: Buffer) {
+type CardSvgOptions = {
+  templateHref?: string;
+  fontHref?: string;
+};
+
+export async function renderCardSvg(card: TapvoraCard, template: Buffer, options: CardSvgOptions = {}) {
   const pin = activationPin(card);
   const permanentUrl = `${SITE_URL}/r/${card.code}`;
   const qrSize = Math.round(CARD_WIDTH * (258 / 1574));
@@ -74,16 +86,17 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer) {
     "<svg",
     `<svg x="${qrLeft}" y="${qrTop}"`,
   );
-  const font = await readFile(path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"));
+  const fontSource = options.fontHref || `data:font/truetype;base64,${await artworkFontData()}`;
+  const templateSource = options.templateHref || `data:image/png;base64,${template.toString("base64")}`;
 
   return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="85mm" height="54mm" viewBox="0 0 ${CARD_WIDTH} ${CARD_HEIGHT}">
   <defs>
     <style>
-      @font-face { font-family: TapvoraGeist; src: url(data:font/truetype;base64,${font.toString("base64")}) format("truetype"); }
+      @font-face { font-family: TapvoraGeist; src: url("${fontSource}") format("truetype"); }
     </style>
   </defs>
-  <image href="data:image/png;base64,${template.toString("base64")}" x="0" y="0" width="${CARD_WIDTH}" height="${CARD_HEIGHT}" preserveAspectRatio="none"/>
+  <image href="${templateSource}" x="0" y="0" width="${CARD_WIDTH}" height="${CARD_HEIGHT}" preserveAspectRatio="none"/>
   ${positionedQr}
   <text x="494" y="587" text-anchor="middle" font-family="TapvoraGeist, Arial, sans-serif" font-size="18" font-weight="800" fill="#13211d" stroke="#13211d" stroke-width="0.35">${pin}</text>
 </svg>`);

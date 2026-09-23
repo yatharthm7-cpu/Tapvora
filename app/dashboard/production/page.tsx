@@ -25,6 +25,7 @@ export default async function ProductionPage({ searchParams }: { searchParams: P
       <div className="production-downloads">
         <a className="button button-outline" href="/api/cards/bulk/csv"><FileSpreadsheet size={16} /> Export CSV</a>
         <a className="button button-dark" href="/api/cards/bulk/print"><Download size={16} /> Download all PNGs (.zip)</a>
+        <a className="button button-dark" href="/api/cards/bulk/print-svg"><Download size={16} /> Download all SVGs (.zip)</a>
       </div>
     </header>
     {query.saved ? <div className="alert alert-success">Production checklist saved.</div> : null}
