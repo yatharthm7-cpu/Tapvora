@@ -372,6 +372,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .input, .select, .textarea { width: 100%; border: 1px solid var(--line); border-radius: 11px; padding: 12px 13px; color: var(--ink); background: white; outline: none; }
 .input:focus, .select:focus, .textarea:focus { border-color: #7a9a27; box-shadow: 0 0 0 3px rgba(216,255,99,.35); }
 .field-help { color: var(--ink-soft); font-size: 11px; line-height: 1.45; }
+.card-branding-field { padding: 16px; border: 1px solid #d9e5e0; border-radius: 14px; background: #f7faf8; }
+.file-input { width: 100%; padding: 12px; border: 1px dashed #9aaca5; border-radius: 12px; background: white; color: var(--ink); }
+.file-input::file-selector-button { margin-right: 12px; padding: 9px 13px; border: 0; border-radius: 9px; background: var(--ink); color: white; font-weight: 800; cursor: pointer; }
+.saved-logo-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+.saved-logo-row img { width: 120px; height: 72px; object-fit: contain; padding: 7px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+.saved-logo-row label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; }
 .form-actions { margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px; }
 .alert { padding: 13px 15px; border-radius: 11px; margin-bottom: 18px; font-size: 13px; }
 .alert-error { background: #fee8e4; color: #8e3328; }

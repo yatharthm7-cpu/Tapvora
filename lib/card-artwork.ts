@@ -2,12 +2,14 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import QRCode from "qrcode";
 import sharp from "sharp";
+import type { OverlayOptions } from "sharp";
 import { SITE_URL } from "./config";
 import type { TapvoraCard } from "./types";
 
 const CARD_WIDTH = 1004;
 const CARD_HEIGHT = 638;
 const ACTIVATION_PIN_PATTERN = /^[A-F0-9]{8}$/;
+const BRAND_COVER = { left: 45, top: 55, width: 340, height: 155 };
 let artworkFontDataPromise: Promise<string> | undefined;
 
 function artworkFontData() {
@@ -40,6 +42,96 @@ function activationLabel(card: TapvoraCard) {
   };
 }
 
+function escapeMarkup(value: string) {
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+function escapeXml(value: string) {
+  return escapeMarkup(value).replaceAll('"', "&quot;").replaceAll("'", "&apos;");
+}
+
+function brandingName(card: TapvoraCard) {
+  const name = (card.card_brand_name || card.business_name || "").trim().slice(0, 60);
+  return name || null;
+}
+
+function logoBuffer(card: TapvoraCard) {
+  const match = card.card_logo_data?.match(/^data:image\/png;base64,([A-Za-z0-9+/=]+)$/);
+  return match ? Buffer.from(match[1], "base64") : null;
+}
+
+function brandLines(name: string, maxChars: number) {
+  if (name.length <= maxChars) return [name];
+  const words = name.split(/\s+/);
+  let first = "";
+  while (words.length) {
+    const candidate = first ? `${first} ${words[0]}` : words[0];
+    if (candidate.length > maxChars && first) break;
+    first = candidate;
+    words.shift();
+    if (first.length >= maxChars) break;
+  }
+  if (!first) first = name.slice(0, maxChars);
+  let second = words.join(" ") || name.slice(first.length).trim();
+  if (second.length > maxChars) second = `${second.slice(0, maxChars - 1).trim()}…`;
+  return second ? [first, second] : [first];
+}
+
+async function brandingOverlays(card: TapvoraCard) {
+  const logo = logoBuffer(card);
+  const name = brandingName(card);
+  if (!logo && !name) return [];
+  const hasLogo = Boolean(logo);
+  const textLeft = hasLogo ? 172 : 65;
+  const textWidth = hasLogo ? 195 : 295;
+  const lines = brandLines(name || "Business", hasLogo ? 18 : 27);
+  const cover = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}"><rect width="100%" height="100%" rx="13" fill="#ffffff"/></svg>`);
+  const overlays: OverlayOptions[] = [
+    { input: cover, left: BRAND_COVER.left, top: BRAND_COVER.top },
+  ];
+
+  if (logo) {
+    const preparedLogo = await sharp(logo)
+      .resize({ width: 95, height: 70, fit: "contain", background: { r: 255, g: 255, b: 255, alpha: 0 } })
+      .png()
+      .toBuffer();
+    overlays.push({ input: preparedLogo, left: 65, top: 80 });
+  }
+
+  const brandNameOverlay = {
+    input: {
+      text: {
+        text: `<span foreground="#07101f"><b>${lines.map(escapeMarkup).join("\n")}</b></span>`,
+        font: `Geist ${hasLogo ? 21 : 24}`,
+        fontfile: path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"),
+        width: textWidth,
+        align: "left",
+        spacing: 2,
+        rgba: true,
+      },
+    },
+    left: textLeft,
+    top: 87,
+  } satisfies OverlayOptions;
+  overlays.push(brandNameOverlay, { ...brandNameOverlay, left: textLeft + 1 });
+  overlays.push({
+    input: {
+      text: {
+        text: '<span foreground="#50615b">Powered by <b>Tapvora</b></span>',
+        font: "Geist 9",
+        fontfile: path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"),
+        width: textWidth,
+        align: "left",
+        rgba: true,
+      },
+    },
+    left: textLeft,
+    top: 169,
+  });
+
+  return overlays;
+}
+
 export async function renderCardPng(card: TapvoraCard, template: Buffer) {
   const permanentUrl = `${SITE_URL}/r/${card.code}`;
   const qrSize = Math.round(CARD_WIDTH * (258 / 1574));
@@ -51,10 +143,12 @@ export async function renderCardPng(card: TapvoraCard, template: Buffer) {
     color: { dark: "#000000", light: "#ffffff" },
   });
   const label = activationLabel(card);
+  const branding = await brandingOverlays(card);
 
   return sharp(template)
     .resize(CARD_WIDTH, CARD_HEIGHT, { fit: "fill" })
     .composite([
+      ...branding,
       { input: qr, left: Math.round(CARD_WIDTH * (686 / 1574)), top: Math.round(CARD_HEIGHT * (346 / 1000)) },
       { input: label, left: 413, top: 568 },
       { input: label, left: 414, top: 568 },
@@ -67,6 +161,7 @@ export async function renderCardPng(card: TapvoraCard, template: Buffer) {
 type CardSvgOptions = {
   templateHref?: string;
   fontHref?: string;
+  logoHref?: string;
 };
 
 export async function renderCardSvg(card: TapvoraCard, template: Buffer, options: CardSvgOptions = {}) {
@@ -88,6 +183,24 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
   );
   const fontSource = options.fontHref || `data:font/truetype;base64,${await artworkFontData()}`;
   const templateSource = options.templateHref || `data:image/png;base64,${template.toString("base64")}`;
+  const logo = logoBuffer(card);
+  const name = brandingName(card);
+  const logoSource = options.logoHref || card.card_logo_data || "";
+  const hasLogo = Boolean(logoSource && logo);
+  const hasBranding = Boolean(hasLogo || name);
+  const textX = hasLogo ? 172 : 65;
+  const textWidth = hasLogo ? 18 : 27;
+  const nameLines = brandLines(name || "Business", textWidth);
+  const nameFontSize = hasLogo ? 25 : 28;
+  const logoElement = hasLogo
+    ? `<image href="${logoSource}" x="65" y="80" width="95" height="70" preserveAspectRatio="xMidYMid meet"/>`
+    : "";
+  const nameSpans = nameLines.map((line, index) => `<tspan x="${textX}" dy="${index ? 30 : 0}">${escapeXml(line)}</tspan>`).join("");
+  const brandingElements = hasBranding ? `
+  <rect x="${BRAND_COVER.left}" y="${BRAND_COVER.top}" width="${BRAND_COVER.width}" height="${BRAND_COVER.height}" rx="13" fill="#ffffff"/>
+  ${logoElement}
+  <text x="${textX}" y="108" font-family="TapvoraGeist, Arial, sans-serif" font-size="${nameFontSize}" font-weight="800" fill="#07101f" stroke="#07101f" stroke-width="0.4">${nameSpans}</text>
+  <text x="${textX}" y="181" font-family="TapvoraGeist, Arial, sans-serif" font-size="11" fill="#50615b">Powered by <tspan font-weight="800">Tapvora</tspan></text>` : "";
 
   return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="85mm" height="54mm" viewBox="0 0 ${CARD_WIDTH} ${CARD_HEIGHT}">
@@ -97,6 +210,7 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
     </style>
   </defs>
   <image href="${templateSource}" x="0" y="0" width="${CARD_WIDTH}" height="${CARD_HEIGHT}" preserveAspectRatio="none"/>
+  ${brandingElements}
   ${positionedQr}
   <text x="494" y="587" text-anchor="middle" font-family="TapvoraGeist, Arial, sans-serif" font-size="18" font-weight="800" fill="#13211d" stroke="#13211d" stroke-width="0.35">${pin}</text>
 </svg>`);

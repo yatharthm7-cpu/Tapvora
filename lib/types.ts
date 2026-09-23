@@ -5,6 +5,8 @@ export type TapvoraCard = {
   card_number: number;
   code: string;
   activation_pin: string | null;
+  card_brand_name: string | null;
+  card_logo_data: string | null;
   business_id: string | null;
   business_name: string | null;
   destination_url: string | null;

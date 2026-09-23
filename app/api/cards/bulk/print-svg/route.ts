@@ -15,7 +15,7 @@ function csvCell(value: string | number | boolean | null) {
 
 export async function GET() {
   await requireAdmin();
-  const cards = await listCards();
+  const cards = await listCards(undefined, { includeLogo: true });
   if (!cards.length) return new Response("No cards available", { status: 404 });
 
   const template = await readFile(path.join(process.cwd(), "public", "tapvora-card-template-transparent.png"));

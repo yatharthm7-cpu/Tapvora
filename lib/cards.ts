@@ -2,7 +2,7 @@ import { isSupabaseConfigured } from "./config";
 import { createClient } from "./supabase/server";
 import type { TapvoraCard } from "./types";
 
-export async function listCards(filters?: { query?: string; status?: string }): Promise<TapvoraCard[]> {
+export async function listCards(filters?: { query?: string; status?: string }, options?: { includeLogo?: boolean }): Promise<TapvoraCard[]> {
   if (!isSupabaseConfigured()) return [];
 
   const supabase = await createClient();
@@ -12,7 +12,10 @@ export async function listCards(filters?: { query?: string; status?: string }): 
     .order("card_number", { ascending: true });
 
   if (error) throw new Error(error.message);
-  const cards = (data || []) as TapvoraCard[];
+  const cards = (data || []).map((card) => ({
+    ...card,
+    card_logo_data: options?.includeLogo ? card.card_logo_data : null,
+  })) as TapvoraCard[];
   const query = filters?.query?.trim().toLowerCase() || "";
   const status = filters?.status || "all";
 
