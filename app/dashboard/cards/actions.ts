@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { generateActivationPin, generateCardCode } from "@/lib/card-code";
 import { isSupabaseConfigured } from "@/lib/config";
-import { optimizeBusinessLogo } from "@/lib/logo-upload";
 import { createClient } from "@/lib/supabase/server";
 import type { CardStatus } from "@/lib/types";
 import { validateReviewUrl } from "@/lib/validation";
@@ -49,9 +48,6 @@ export async function updateCardAction(formData: FormData) {
   let businessName = String(formData.get("business_name") || "").trim();
   let destinationUrl = String(formData.get("destination_url") || "").trim();
   const notes = String(formData.get("notes") || "").trim();
-  const cardBrandName = String(formData.get("card_brand_name") || "").trim().slice(0, 60);
-  const logoFile = formData.get("card_logo");
-  const removeLogo = formData.get("remove_card_logo") === "on";
   const status = String(formData.get("status") || "unused") as CardStatus;
 
   if (!id || !["unused", "active", "inactive"].includes(status)) {
@@ -79,27 +75,15 @@ export async function updateCardAction(formData: FormData) {
     redirect(`/dashboard/cards/${id}?error=${encodeURIComponent("An active card needs a business name and Google Review URL.")}`);
   }
 
-  let cardLogoData: string | null | undefined;
-  if (removeLogo) {
-    cardLogoData = null;
-  } else if (logoFile instanceof File && logoFile.size > 0) {
-    try {
-      cardLogoData = await optimizeBusinessLogo(logoFile);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "The business logo could not be processed.";
-      redirect(`/dashboard/cards/${id}?error=${encodeURIComponent(message)}`);
-    }
-  }
-
   const changes: Record<string, string | null> = {
     business_name: businessName || null,
     business_id: businessId || null,
     destination_url: destinationUrl || null,
     notes: notes || null,
-    card_brand_name: cardBrandName || null,
+    card_brand_name: null,
+    card_logo_data: null,
     status,
   };
-  if (cardLogoData !== undefined) changes.card_logo_data = cardLogoData;
 
   const { error } = await supabase
     .from("cards")

@@ -68,16 +68,8 @@ export default async function CardDetailPage({ params, searchParams }: { params:
                   <input className="input" id="destination_url" name="destination_url" type="url" defaultValue={card.destination_url || ""} placeholder="https://g.page/r/.../review" />
                   <span className="field-help">An active card needs a Google, Google Maps, g.page, or maps.app.goo.gl HTTPS link.</span>
                 </div>
-                <div className="field field-full card-branding-field">
-                  <label htmlFor="card_brand_name">Business name on card</label>
-                  <input className="input" id="card_brand_name" name="card_brand_name" maxLength={60} defaultValue={card.card_brand_name || card.business_name || ""} placeholder="Business or brand name" />
-                  <span className="field-help">This replaces the large Tapvora logo on the printed card.</span>
-                </div>
-                <div className="field field-full card-branding-field">
-                  <label htmlFor="card_logo">Business logo <span className="muted">(optional)</span></label>
-                  <input className="file-input" id="card_logo" name="card_logo" type="file" accept="image/png,image/jpeg,image/webp" />
-                  <span className="field-help">PNG, JPG, or WebP up to 2 MB. A transparent PNG works best.</span>
-                  {card.card_logo_data ? <div className="saved-logo-row"><Image src={card.card_logo_data} alt="Current business logo" width={120} height={72} unoptimized /><label><input type="checkbox" name="remove_card_logo" /> Remove current logo</label></div> : null}
+                <div className="field field-full">
+                  <span className="field-help">Printed artwork is intentionally unbranded. Only www.tapvora.in appears in the bottom-right corner.</span>
                 </div>
                 <div className="field field-full">
                   <label htmlFor="notes">Internal notes</label>
