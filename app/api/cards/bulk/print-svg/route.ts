@@ -20,9 +20,13 @@ export async function GET() {
 
   const template = await readFile(path.join(process.cwd(), "public", "tapvora-card-template-transparent.png"));
   const font = await readFile(path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf"));
+  const headingFont = await readFile(path.join(process.cwd(), "public", "fonts", "SpaceGrotesk-Variable.ttf"));
+  const headingFontLicense = await readFile(path.join(process.cwd(), "public", "fonts", "SpaceGrotesk-OFL.txt"));
   const files: { name: string; data: Buffer }[] = [
     { name: "assets/tapvora-card-template-transparent.png", data: template },
     { name: "assets/Geist-Regular.ttf", data: font },
+    { name: "assets/SpaceGrotesk-Variable.ttf", data: headingFont },
+    { name: "assets/SpaceGrotesk-OFL.txt", data: headingFontLicense },
     { name: "README.txt", data: Buffer.from("Tapvora SVG production files\r\n\r\nExtract the entire ZIP before opening the SVG files. Keep the cards and assets folders together so every card displays correctly.\r\n", "utf8") },
   ];
   for (const card of cards) {
@@ -32,6 +36,7 @@ export async function GET() {
       data: await renderCardSvg(card, template, {
         templateHref: "../assets/tapvora-card-template-transparent.png",
         fontHref: "../assets/Geist-Regular.ttf",
+        headingFontHref: "../assets/SpaceGrotesk-Variable.ttf",
       }),
     });
   }
