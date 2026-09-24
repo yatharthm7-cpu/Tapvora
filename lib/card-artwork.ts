@@ -128,8 +128,8 @@ export async function renderCardSvg(card: TapvoraCard, template: Buffer, options
   ${textPath(body, "LEAVE US A", 68, 410, 15, "#536174", { letterSpacing: 1.5, strokeWidth: 0.45 })}
   ${textPath(heading, "Google Review", 68, 454, 34, "#090b0a", { strokeWidth: 1.8 })}
   ${textPath(body, "Tap or scan to get started", 68, 493, 17, "#536174")}
-  ${textPath(body, "“Your feedback helps us improve.”", 68, 526, 14, "#687771")}
-  ${textPath(body, "“Every review makes a difference.”", 68, 550, 14, "#687771")}
+  ${textPath(body, "“Your feedback helps us improve.”", 68, 526, 15, "#687771", { strokeWidth: 0.2 })}
+  ${textPath(body, "“Every review makes a difference.”", 68, 550, 15, "#687771", { strokeWidth: 0.2 })}
   ${positionedQr}
   ${textPath(body, pin, 494, 587, 18, "#13211d", { anchor: "middle", strokeWidth: 0.7 })}
   ${textPath(body, "www.tapvora.in", 948, 588, 14, "#33423d", { anchor: "end", strokeWidth: 0.45 })}
