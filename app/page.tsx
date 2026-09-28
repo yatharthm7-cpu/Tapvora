@@ -55,8 +55,8 @@ export default function HomePage() {
             <div className="hero-orbit orbit-two" />
             <div className="product-card product-card-real">
               <Image
-                src="/tapvora-card-template-transparent.png"
-                alt="Tapvora Google Review NFC and QR card"
+                src="/tapvora-card-updated-v2.png"
+                alt="Updated Tapvora Google Review NFC and QR card"
                 fill
                 priority
                 sizes="(max-width: 960px) 90vw, 485px"
@@ -150,7 +150,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="film-card">
-              <Image src="/tapvora-card-template-transparent.png" alt="" fill sizes="380px" />
+              <Image src="/tapvora-card-updated-v2.png" alt="" fill sizes="380px" />
               <span className="tap-wave wave-one" /><span className="tap-wave wave-two" /><span className="tap-wave wave-three" />
             </div>
           </div>

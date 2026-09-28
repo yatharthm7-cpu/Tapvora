@@ -88,8 +88,13 @@ function activationPin(card: TapvoraCard) {
   return pin;
 }
 
-export async function renderCardPng(card: TapvoraCard, template: Buffer) {
-  const svg = await renderCardSvg(card, template);
+type CardSvgOptions = {
+  templateHref?: string;
+  qrUrl?: string;
+};
+
+export async function renderCardPng(card: TapvoraCard, template: Buffer, options: CardSvgOptions = {}) {
+  const svg = await renderCardSvg(card, template, options);
   return sharp(svg, { density: 300 })
     .resize(CARD_WIDTH, CARD_HEIGHT, { fit: "fill" })
     .flatten({ background: "#ffffff" })
@@ -98,13 +103,9 @@ export async function renderCardPng(card: TapvoraCard, template: Buffer) {
     .toBuffer();
 }
 
-type CardSvgOptions = {
-  templateHref?: string;
-};
-
 export async function renderCardSvg(card: TapvoraCard, template: Buffer, options: CardSvgOptions = {}) {
   const pin = activationPin(card);
-  const permanentUrl = `${SITE_URL}/r/${card.code}`;
+  const permanentUrl = options.qrUrl || `${SITE_URL}/r/${card.code}`;
   const qrSize = Math.round(CARD_WIDTH * (258 / 1574));
   const qrLeft = Math.round(CARD_WIDTH * (686 / 1574));
   const qrTop = Math.round(CARD_HEIGHT * (346 / 1000));
