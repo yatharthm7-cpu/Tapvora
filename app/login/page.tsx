@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, LockKeyhole } from "lucide-react";
+import { AuthMotionBackground } from "@/components/auth-motion-background";
 import { Brand } from "@/components/brand";
 import { isSupabaseConfigured, SITE_URL } from "@/lib/config";
 import { loginAction } from "./actions";
@@ -12,23 +13,19 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const demo = !isSupabaseConfigured();
 
   return (
-    <main className="login-page">
-      <section className="login-art">
-        <Brand />
-        <div className="login-quote">
-          <h1>Your cards.<br />One clear view.</h1>
-          <p>Create permanent links, assign businesses, update review destinations, and prepare every card for print.</p>
-        </div>
-        <span style={{ color: "#71827c", fontSize: 12 }}>Private Tapvora administration</span>
-      </section>
-      <section className="login-form-side">
-        <div className="login-card">
-          <LockKeyhole size={30} />
-          <h2>Welcome back</h2>
+    <main className="auth-motion-page">
+      <AuthMotionBackground />
+      <section className="auth-motion-card" aria-labelledby="admin-login-title">
+        <div className="auth-card-brand"><Brand /></div>
+        <div className="auth-card-icon"><LockKeyhole size={24} /></div>
+        <div className="auth-card-heading">
+          <span>Private administration</span>
+          <h1 id="admin-login-title">Welcome back</h1>
           <p>Sign in to manage Tapvora cards and review links.</p>
+        </div>
           {error ? <div className="alert alert-error">{error}</div> : null}
           {demo ? <div className="alert alert-demo">Demo mode is active. Continue without credentials to preview the dashboard.</div> : null}
-          <form action={loginAction}>
+          <form action={loginAction} className="auth-motion-form">
             {!demo ? (
               <>
                 <div className="field">
@@ -42,12 +39,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                 <div className="login-help"><Link href="/forgot-password">Forgot password?</Link></div>
               </>
             ) : null}
-            <button className="button button-dark button-wide" type="submit">
+            <button className="button auth-submit button-wide" type="submit">
               {demo ? "Preview dashboard" : "Sign in"} <ArrowRight size={17} />
             </button>
           </form>
-          <div style={{ marginTop: 22, textAlign: "center", fontSize: 12 }}><Link className="muted" href="/">← Back to {SITE_URL.replace(/^https?:\/\//, "")}</Link></div>
-        </div>
+          <div className="auth-card-back"><Link href="/">← Back to {SITE_URL.replace(/^https?:\/\//, "")}</Link></div>
       </section>
     </main>
   );
